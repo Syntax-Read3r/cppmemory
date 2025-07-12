@@ -67,12 +67,64 @@ export const useQuizProgress = () => {
     return progressData.completedQuizzes.includes(quizId);
   };
 
-  const getChapterProgress = (childQuizIds: string[]): { completed: number; total: number; percentage: number } => {
+  const getChapterProgress = (childQuizIds: string[]): { completed: number; total: number; percentage: number; hasAttempted: boolean } => {
     const total = childQuizIds.length;
     const completed = childQuizIds.filter(id => isQuizCompleted(id)).length;
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
     
-    return { completed, total, percentage };
+    // Check if any child quiz has been attempted (has a score recorded)
+    const hasAttempted = childQuizIds.some(id => progressData.quizScores[id] !== undefined);
+    
+    return { completed, total, percentage, hasAttempted };
+  };
+
+  const resetChapterProgress = (childQuizIds: string[]) => {
+    try {
+      // Remove chapter quizzes from completed list
+      const updatedCompleted = progressData.completedQuizzes.filter(
+        quizId => !childQuizIds.includes(quizId)
+      );
+      
+      // Remove chapter quiz scores
+      const updatedScores = { ...progressData.quizScores };
+      childQuizIds.forEach(quizId => {
+        delete updatedScores[quizId];
+      });
+      
+      // Update localStorage
+      localStorage.setItem('completedQuizzes', JSON.stringify(updatedCompleted));
+      localStorage.setItem('quizScores', JSON.stringify(updatedScores));
+      
+      // Update state
+      setProgressData({
+        completedQuizzes: updatedCompleted,
+        quizScores: updatedScores
+      });
+      
+      return true;
+    } catch (error) {
+      console.warn('Failed to reset chapter progress:', error);
+      return false;
+    }
+  };
+
+  const resetAllProgress = () => {
+    try {
+      // Clear all localStorage data
+      localStorage.removeItem('completedQuizzes');
+      localStorage.removeItem('quizScores');
+      
+      // Reset state to initial values
+      setProgressData({
+        completedQuizzes: [],
+        quizScores: {}
+      });
+      
+      return true;
+    } catch (error) {
+      console.warn('Failed to reset all progress:', error);
+      return false;
+    }
   };
 
   return {
@@ -80,6 +132,8 @@ export const useQuizProgress = () => {
     saveQuizScore,
     getQuizScore,
     isQuizCompleted,
-    getChapterProgress
+    getChapterProgress,
+    resetChapterProgress,
+    resetAllProgress
   };
 };

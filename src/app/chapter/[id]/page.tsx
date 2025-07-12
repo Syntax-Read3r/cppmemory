@@ -19,11 +19,22 @@ export default function ChapterPage({ params }: ChapterPageProps) {
     notFound();
   }
 
-  const { isQuizCompleted, getChapterProgress, getQuizScore } = useQuizProgress();
+  const { isQuizCompleted, getChapterProgress, getQuizScore, resetChapterProgress } = useQuizProgress();
   
   // Calculate chapter progress
   const childQuizIds = parentChapter.children.map(child => child.id);
   const chapterProgress = getChapterProgress(childQuizIds);
+
+  const handleResetChapter = () => {
+    if (confirm(`Are you sure you want to reset all progress for ${parentChapter.title}? This will clear all completed quizzes and scores for this chapter.`)) {
+      const success = resetChapterProgress(childQuizIds);
+      if (success) {
+        alert('Chapter progress has been reset successfully!');
+      } else {
+        alert('Failed to reset chapter progress. Please try again.');
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
@@ -127,7 +138,17 @@ export default function ChapterPage({ params }: ChapterPageProps) {
 
         {/* Progress overview */}
         <section className="p-6 bg-white rounded-lg shadow-md">
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Chapter Progress</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Chapter Progress</h3>
+            {chapterProgress.completed > 0 && (
+              <button
+                onClick={handleResetChapter}
+                className="mt-2 sm:mt-0 px-4 py-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-colors"
+              >
+                🔄 Reset Chapter Progress
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">{parentChapter.children.length}</div>
