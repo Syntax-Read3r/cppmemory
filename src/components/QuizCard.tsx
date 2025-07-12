@@ -6,22 +6,24 @@ import { Question } from '@/data/quizzes';
 interface QuizCardProps {
   question: Question;
   onAnswer: (correct: boolean) => void;
+  onNext: () => void;
   currentQuestion: number;
   totalQuestions: number;
+  isLastQuestion: boolean;
 }
 
-export default function QuizCard({ question, onAnswer, currentQuestion, totalQuestions }: QuizCardProps) {
+export default function QuizCard({ question, onAnswer, onNext, currentQuestion, totalQuestions, isLastQuestion }: QuizCardProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState<{text: string, isCorrect: boolean}[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true); // Start visible to ensure quiz shows up
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
 
-  // Reset state and shuffle options when question changes with animation
+  // Initialize question data on mount and handle question changes
   useEffect(() => {
-    // Skip animation on initial load
-    if (isInitialLoad) {
+    const setupQuestion = () => {
       // Reset state
       setSelectedAnswer(null);
       setShowExplanation(false);
@@ -35,37 +37,35 @@ export default function QuizCard({ question, onAnswer, currentQuestion, totalQue
       // Shuffle the options
       const shuffled = [...optionsWithCorrectFlag].sort(() => Math.random() - 0.5);
       setShuffledOptions(shuffled);
-      
+    };
+
+    // First load - just setup, no animation needed since we start visible
+    if (isInitialLoad) {
+      setupQuestion();
+      setPreviousQuestionId(question.id);
       setIsInitialLoad(false);
       return;
     }
     
-    // Fade out current question
-    setIsFadingOut(true);
-    setIsVisible(false);
-    
-    const timer = setTimeout(() => {
-      // Reset state
-      setSelectedAnswer(null);
-      setShowExplanation(false);
+    // Only animate if the question actually changed
+    if (previousQuestionId !== question.id) {
+      // Fade out current question
+      setIsFadingOut(true);
+      setIsVisible(false);
       
-      // Create options with correct answer tracking
-      const optionsWithCorrectFlag = question.options.map((option, index) => ({
-        text: option,
-        isCorrect: index === question.correctAnswer
-      }));
+      const timer = setTimeout(() => {
+        // Setup new question
+        setupQuestion();
+        setPreviousQuestionId(question.id);
+        
+        // Fade in new question
+        setIsFadingOut(false);
+        setIsVisible(true);
+      }, 800); // 800ms fade out duration
       
-      // Shuffle the options
-      const shuffled = [...optionsWithCorrectFlag].sort(() => Math.random() - 0.5);
-      setShuffledOptions(shuffled);
-      
-      // Fade in new question (different duration)
-      setIsFadingOut(false);
-      setIsVisible(true);
-    }, 800); // 800ms fade out duration
-    
-    return () => clearTimeout(timer);
-  }, [question.id, question.options, question.correctAnswer, isInitialLoad]);
+      return () => clearTimeout(timer);
+    }
+  }, [question.id, question.options, question.correctAnswer, isInitialLoad, previousQuestionId]);
 
   const renderSyntaxHighlightedCode = (code: string) => {
     if (!code) return null;
@@ -286,9 +286,7 @@ export default function QuizCard({ question, onAnswer, currentQuestion, totalQue
     setShowExplanation(true);
     
     const isCorrect = shuffledOptions[optionIndex]?.isCorrect || false;
-    setTimeout(() => {
-      onAnswer(isCorrect);
-    }, 2000);
+    onAnswer(isCorrect);
   };
 
   const getOptionClassName = (index: number) => {
@@ -368,6 +366,17 @@ export default function QuizCard({ question, onAnswer, currentQuestion, totalQue
         <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg">
           <h3 className="font-medium text-blue-900 mb-2">Explanation:</h3>
           <p className="text-blue-800 text-sm">{question.explanation}</p>
+        </div>
+      )}
+
+      {selectedAnswer !== null && (
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={onNext}
+            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+          >
+            {isLastQuestion ? 'Finish Quiz' : 'Next Question'}
+          </button>
         </div>
       )}
     </div>

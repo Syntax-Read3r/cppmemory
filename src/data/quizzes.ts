@@ -32,57 +32,151 @@ export const quizzes: Quiz[] = [
       {
         id: "chapter-1-part-1",
         title: "C++ Basics - Part 1",
-        description: "Statements, comments, and variable introduction",
+        description: "Statements and the structure of a program",
         chapter: "Chapter 1",
-        sections: ["1.1 Statements and the structure of a program", "1.2 Comments", "1.3 Introduction to objects and variables"],
+        sections: ["1.1 Statements and the structure of a program"],
         questions: [
           {
             id: 1,
             question: "What is a statement in C++?",
             options: [
-              "A complete instruction that performs some action",
+              "A type of instruction that causes the program to perform some action",
               "Only variable declarations",
               "Only function calls",
-              "Comments in the code"
+              "A comment in the code"
             ],
             correctAnswer: 0,
-            explanation: "A statement is a complete instruction that tells the computer to perform some action. Examples include variable declarations, assignments, and function calls."
+            explanation: "A statement is a type of instruction that causes the program to perform some action. Statements are the smallest independent unit of computation in C++."
           },
           {
             id: 2,
-            question: "Which of the following is a valid C++ comment?",
+            question: "How do most statements in C++ end?",
             options: [
-              "# This is a comment",
-              "/* This is a comment */",
-              "<!-- This is a comment -->",
-              "// This is a comment"
+              "With a comma",
+              "With a semicolon",
+              "With a period",
+              "With a colon"
             ],
             correctAnswer: 1,
-            explanation: "C++ supports two types of comments: single-line comments starting with '//' and multi-line comments enclosed in '/* */'.",
+            explanation: "Most (but not all) statements in C++ end in a semicolon. If you see a line that ends in a semicolon, it's probably a statement."
+          },
+          {
+            id: 3,
+            question: "What is a function in C++?",
+            options: [
+              "A single statement",
+              "A collection of statements that get executed sequentially",
+              "Only the main function",
+              "A type of variable"
+            ],
+            correctAnswer: 1,
+            explanation: "A function is a collection of statements that get executed sequentially (in order, from top to bottom). Functions are used to organize code and perform specific tasks."
+          },
+          {
+            id: 4,
+            question: "What is the name of the special function that every C++ program must have?",
+            options: [
+              "start",
+              "begin",
+              "main",
+              "program"
+            ],
+            correctAnswer: 2,
+            explanation: "Every C++ program must have a special function named 'main' (all lower case letters). When the program is run, the statements inside main are executed in sequential order.",
             codeSnippet: `#include <iostream>
 
-int main() {
-    // This is a single-line comment
-    
-    /* This is a 
-       multi-line comment */
-    
-    std::cout << "Hello World!" << std::endl;
+int main()
+{
+    std::cout << "Hello world!";
     return 0;
 }`,
             codeLanguage: "cpp"
           },
           {
-            id: 3,
-            question: "What is an object in C++?",
+            id: 5,
+            question: "When does a C++ program typically terminate?",
             options: [
-              "Only classes and structs",
-              "A region of storage that can hold a value",
-              "Only variables with names",
-              "Only dynamically allocated memory"
+              "When the first function is called",
+              "After the last statement inside function main has been executed",
+              "When a syntax error occurs",
+              "When the preprocessor directive is processed"
             ],
             correctAnswer: 1,
-            explanation: "An object is a region of storage (typically memory) that can hold a value. Objects can be named (variables) or unnamed (anonymous)."
+            explanation: "Programs typically terminate (finish running) after the last statement inside function main has been executed, though programs may abort early in some circumstances."
+          },
+          {
+            id: 6,
+            question: "What is the name of a function, object, or type called in programming?",
+            options: [
+              "A label",
+              "A tag",
+              "An identifier",
+              "A descriptor"
+            ],
+            correctAnswer: 2,
+            explanation: "In programming, the name of a function (or object, type, template, etc.) is called its identifier. For example, 'main' is the identifier for the main function."
+          },
+          {
+            id: 7,
+            question: "What does the #include <iostream> preprocessor directive do?",
+            options: [
+              "It defines the main function",
+              "It indicates that we want to use the contents of the iostream library",
+              "It creates a syntax error",
+              "It ends the program"
+            ],
+            correctAnswer: 1,
+            explanation: "The #include <iostream> preprocessor directive indicates that we would like to use the contents of the iostream library, which allows us to read and write text from/to the console."
+          },
+          {
+            id: 8,
+            question: "What happens if you omit a required semicolon in a C++ statement?",
+            options: [
+              "The program runs normally",
+              "The compiler generates a syntax error",
+              "The statement is ignored",
+              "The program crashes at runtime"
+            ],
+            correctAnswer: 1,
+            explanation: "If you omit a required semicolon, the compiler will halt compilation and issue a syntax error. The compiler will generally point you to where the semicolon is expected.",
+            codeSnippet: `// This will cause a syntax error:
+std::cout << "Hello world!"  // Missing semicolon
+return 0;
+
+// Correct version:
+std::cout << "Hello world!"; // Semicolon present
+return 0;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 9,
+            question: "What are the curly braces { } used for in the main function?",
+            options: [
+              "To mark comments",
+              "To define the function body and show which lines are part of the function",
+              "To separate statements",
+              "To include libraries"
+            ],
+            correctAnswer: 1,
+            explanation: "The opening curly brace { and closing curly brace } tell the compiler which lines are part of the main function. Everything between them is considered part of the function body."
+          },
+          {
+            id: 10,
+            question: "What does 'return 0;' signify in a C++ program?",
+            options: [
+              "The program encountered an error",
+              "The program ran successfully",
+              "The program should restart",
+              "The program should pause"
+            ],
+            correctAnswer: 1,
+            explanation: "The 'return 0;' statement returns the integer value 0 to the operating system, which means 'everything went okay!' It indicates that the program ran successfully.",
+            codeSnippet: `int main()
+{
+    std::cout << "Hello world!";
+    return 0; // Indicates successful execution
+}`,
+            codeLanguage: "cpp"
           }
         ]
       },

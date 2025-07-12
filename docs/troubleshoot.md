@@ -689,7 +689,35 @@ npm run build && ls -la out/     # Check build output
 
 ## 🧠 CppMemory-Specific Issues
 
-### 10. Quiz Data and LocalStorage
+### 10. Progress Tracking System
+
+#### **Issue: Progress not displaying correctly**
+
+**Common scenarios:**
+- Cards not showing correct completion status
+- Chapter progress percentage incorrect
+- Visual indicators not updating
+
+**❌ Common mistakes:**
+```typescript
+// Wrong: Not checking for 100% completion
+const isCompleted = quizScore && quizScore.percentage > 0;
+
+// Wrong: Not calculating chapter progress correctly
+const chapterProgress = completedQuizzes.length / totalQuizzes;
+```
+
+**✅ Correct implementation:**
+```typescript
+// Correct: Only 100% scores count as completed
+const isCompleted = quizScore && quizScore.percentage === 100;
+
+// Correct: Use the progress hook
+const { getChapterProgress, isQuizCompleted } = useQuizProgress();
+const chapterProgress = getChapterProgress(childQuizIds);
+```
+
+### 11. LocalStorage Progress Persistence
 
 #### **Issue: Quiz progress not persisting between sessions**
 
@@ -705,22 +733,32 @@ sessionStorage.setItem('quizProgress', JSON.stringify(data));
 
 // Wrong: Not handling JSON parse errors
 const scores = JSON.parse(localStorage.getItem('quizScores'));
+
+// Wrong: Saving partial scores as completed
+localStorage.setItem('completedQuizzes', JSON.stringify([...completed, quizId]));
 ```
 
 **✅ Correct implementation:**
 ```typescript
-// Safe localStorage with error handling
-try {
-  const completedQuizzes = JSON.parse(localStorage.getItem('completedQuizzes') || '[]');
-  const quizScores = JSON.parse(localStorage.getItem('quizScores') || '{}');
+// Safe localStorage with error handling and 100% requirement
+const saveQuizScore = (quizId: string, correct: number, total: number) => {
+  const percentage = Math.round((correct / total) * 100);
+  const completed = percentage === 100; // Only 100% counts as completed
   
-  // Update data
-  quizScores[quizId] = { correct, total, percentage };
-  localStorage.setItem('quizScores', JSON.stringify(quizScores));
-} catch (error) {
-  console.warn('LocalStorage not available:', error);
-  // Handle gracefully without breaking app
-}
+  try {
+    const newScore = { correct, total, percentage, completed };
+    const updatedScores = { ...quizScores, [quizId]: newScore };
+    localStorage.setItem('quizScores', JSON.stringify(updatedScores));
+    
+    // Only add to completed list if 100%
+    if (completed && !completedQuizzes.includes(quizId)) {
+      const updatedCompleted = [...completedQuizzes, quizId];
+      localStorage.setItem('completedQuizzes', JSON.stringify(updatedCompleted));
+    }
+  } catch (error) {
+    console.warn('LocalStorage not available:', error);
+  }
+};
 ```
 
 #### **Issue: Quiz questions not displaying correctly**
@@ -909,6 +947,54 @@ const optionsWithCorrectFlag = question.options.map((option, index) => ({
 const shuffled = [...optionsWithCorrectFlag].sort(() => Math.random() - 0.5);
 const isCorrect = shuffledOptions[optionIndex]?.isCorrect || false;
 ```
+
+### 15. Visual Status System Issues
+
+#### **Issue: Card colors not displaying correctly**
+
+**Common scenarios:**
+- Parent cards not showing correct completion status
+- Child cards stuck in wrong visual state
+- Progress colors inconsistent across pages
+
+**❌ Wrong styling logic:**
+```typescript
+// Wrong: Not checking completion properly
+const cardStyle = quizScore ? 'border-green-200' : 'border-gray-200';
+
+// Wrong: Not handling attempted vs completed states
+className={`${isCompleted ? 'border-green-200' : 'border-orange-200'}`}
+```
+
+**✅ Correct visual status logic:**
+```typescript
+// Correct: Proper state hierarchy
+let borderStyle = 'border-gray-200';        // Default: not started
+let bgStyle = 'bg-white';
+
+if (isCompleted) {                          // 100% completion
+  borderStyle = 'border-green-200';
+  bgStyle = 'bg-green-50';
+} else if (quizScore && !isCompleted) {     // Attempted but not 100%
+  borderStyle = 'border-orange-200';
+  bgStyle = 'bg-orange-50';
+}
+
+// For parent cards: check all children
+if (quiz.isParent && quiz.children) {
+  const chapterProgress = getChapterProgress(childQuizIds);
+  if (chapterProgress.percentage === 100) {
+    // All children completed
+  } else if (chapterProgress.percentage > 0) {
+    // Some children attempted/completed
+  }
+}
+```
+
+**Color System Reference:**
+- 🟢 **Green** (`border-green-200`, `bg-green-50`): 100% mastery achieved
+- 🟠 **Orange** (`border-orange-200`, `bg-orange-50`): In progress, not perfected
+- ⚪ **Gray** (`border-gray-200`, `bg-white`): Fresh, not started
 
 ---
 

@@ -289,9 +289,10 @@ CppMemory follows a utility-first approach using Tailwind CSS with consistent pa
 ### CppMemory Theme Colors
 - **Purple**: Primary brand color for buttons and accents (`bg-purple-600`, `text-purple-600`)
 - **Blue**: Secondary accent and links (`bg-blue-500`, `text-blue-800`)
-- **Green**: Correct answers and success states (`bg-green-500`, `border-green-500`)
+- **Green**: Completed/mastered state (100% score) (`bg-green-50`, `border-green-200`)
+- **Orange**: In-progress state (attempted but not 100%) (`bg-orange-50`, `border-orange-200`)
 - **Red**: Incorrect answers and error states (`bg-red-500`, `border-red-500`) 
-- **Gray**: Neutral states and disabled options (`bg-gray-200`, `text-gray-500`)
+- **Gray**: Fresh/not started state (`bg-white`, `border-gray-200`)
 
 ### Code Theme
 - **Background**: `bg-gray-900`
@@ -339,6 +340,62 @@ CppMemory follows a utility-first approach using Tailwind CSS with consistent pa
   <div className="bg-gray-900 p-4">
     {/* Syntax highlighted code */}
   </div>
+</div>
+```
+
+## 🎯 Progress Tracking Cards
+
+### **Card Status Visual System**
+```jsx
+// Dynamic card styling based on progress
+{quizzes.map((quiz) => {
+  let borderStyle = 'border-gray-200';     // Default: not started
+  let bgStyle = 'bg-white';
+  
+  if (isCompleted) {                       // 100% completion
+    borderStyle = 'border-green-200';
+    bgStyle = 'bg-green-50';
+  } else if (hasAttempted) {              // Attempted but not 100%
+    borderStyle = 'border-orange-200';
+    bgStyle = 'bg-orange-50';
+  }
+  
+  return (
+    <Link className={`border-2 ${borderStyle} ${bgStyle}`}>
+      {/* Card content */}
+    </Link>
+  );
+})}
+```
+
+### **Progress Status Indicators**
+```jsx
+// Completion badge for 100% scores
+{finalScore === 100 && (
+  <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+    ✅ Section Completed!
+  </div>
+)}
+
+// Progress percentage badge for in-progress quizzes
+{quizScore && !isCompleted && (
+  <span className="px-2 py-1 text-xs font-medium rounded-full text-yellow-800 bg-yellow-100">
+    {quizScore.percentage}%
+  </span>
+)}
+```
+
+### **Chapter Progress Display**
+```jsx
+// Chapter completion percentage
+<span className="px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full">
+  {chapterProgress.percentage}% completed
+</span>
+
+// Progress overview card
+<div className="text-center">
+  <div className="text-2xl font-bold text-green-600">{chapterProgress.percentage}%</div>
+  <div className="text-sm text-gray-600">Completed</div>
 </div>
 ```
 

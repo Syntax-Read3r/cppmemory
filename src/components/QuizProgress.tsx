@@ -2,9 +2,10 @@ interface QuizProgressProps {
   correct: number;
   total: number;
   currentQuestion: number;
+  totalQuestions: number;
 }
 
-export default function QuizProgress({ correct, total, currentQuestion }: QuizProgressProps) {
+export default function QuizProgress({ correct, total, currentQuestion, totalQuestions }: QuizProgressProps) {
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
   
   return (
@@ -24,7 +25,7 @@ export default function QuizProgress({ correct, total, currentQuestion }: QuizPr
       
       <div className="mt-3">
         <div className="flex space-x-1">
-          {Array.from({ length: Math.max(total, 5) }, (_, i) => (
+          {Array.from({ length: totalQuestions }, (_, i) => (
             <div
               key={i}
               className={`h-2 flex-1 rounded ${

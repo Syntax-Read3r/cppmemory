@@ -54,21 +54,20 @@ export default function QuizPage() {
     }
     
     setAnsweredQuestions(prev => prev + 1);
+  };
 
+  const handleNext = () => {
     if (currentQuestionIndex + 1 < quiz!.questions.length) {
-      setTimeout(() => {
-        setCurrentQuestionIndex(prev => prev + 1);
-      }, 500);
+      setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      setTimeout(() => {
-        const finalCorrect = correct ? correctAnswers + 1 : correctAnswers;
-        const totalQuestions = quiz!.questions.length;
-        
-        // Save the quiz score and completion status
-        saveQuizScore(quizId, finalCorrect, totalQuestions);
-        
-        setIsCompleted(true);
-      }, 500);
+      // Quiz completed
+      const finalCorrect = correctAnswers;
+      const totalQuestions = quiz!.questions.length;
+      
+      // Save the quiz score and completion status
+      saveQuizScore(quizId, finalCorrect, totalQuestions);
+      
+      setIsCompleted(true);
     }
   };
 
@@ -194,13 +193,16 @@ export default function QuizPage() {
           correct={correctAnswers}
           total={answeredQuestions}
           currentQuestion={currentQuestionIndex + 1}
+          totalQuestions={quiz.questions.length}
         />
 
         <QuizCard
           question={quiz.questions[currentQuestionIndex]}
           onAnswer={handleAnswer}
+          onNext={handleNext}
           currentQuestion={currentQuestionIndex + 1}
           totalQuestions={quiz.questions.length}
+          isLastQuestion={currentQuestionIndex === quiz.questions.length - 1}
         />
       </div>
     </div>
