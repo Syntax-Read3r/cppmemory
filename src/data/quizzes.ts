@@ -32,9 +32,9 @@ export const quizzes: Quiz[] = [
       {
         id: "chapter-1-part-1",
         title: "C++ Basics - Part 1",
-        description: "Statements and the structure of a program",
+        description: "Statements, program structure, comments, and variables",
         chapter: "Chapter 1",
-        sections: ["1.1 Statements and the structure of a program"],
+        sections: ["1.1 Statements and the structure of a program", "1.2 Comments", "1.3 Introduction to objects and variables"],
         questions: [
           {
             id: 1,
@@ -177,6 +177,314 @@ return 0;`,
     return 0; // Indicates successful execution
 }`,
             codeLanguage: "cpp"
+          },
+          {
+            id: 11,
+            question: "What symbol begins a C++ single-line comment?",
+            options: [
+              "#",
+              "//",
+              "/* */",
+              "--"
+            ],
+            correctAnswer: 1,
+            explanation: "The // symbol begins a C++ single-line comment, which tells the compiler to ignore everything from // to the end of the line."
+          },
+          {
+            id: 12,
+            question: "Which of the following is a valid multi-line comment in C++?",
+            options: [
+              "// This is a comment",
+              "/* This is a comment */", 
+              "<!-- This is a comment -->",
+              "# This is a comment"
+            ],
+            correctAnswer: 1,
+            explanation: "Multi-line comments in C++ are enclosed between /* and */ symbols. Everything between these symbols is ignored by the compiler.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    /* This is a multi-line comment.
+       This line will be ignored.
+       So will this one. */
+    
+    std::cout << "Hello World!" << std::endl; // Single-line comment
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 13,
+            question: "Can multi-line comments be nested inside other multi-line comments?",
+            options: [
+              "Yes, C++ supports nested multi-line comments",
+              "No, multi-line comments cannot be nested",
+              "Only if using special syntax",
+              "Yes, but only up to 3 levels deep"
+            ],
+            correctAnswer: 1,
+            explanation: "Multi-line comments cannot be nested. The first */ encountered will end the comment, which can lead to compilation errors if you try to nest them.",
+            codeSnippet: `// This will cause a compilation error:
+/* This is a multi-line /* comment */ this is not inside the comment */
+// The above comment ends at the first */, not the second */
+
+// Correct approach - don't nest multi-line comments
+/* This is a comment */
+/* This is a separate comment */`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 14,
+            question: "What makes a good comment according to C++ best practices?",
+            options: [
+              "Comments that explain what the code is doing",
+              "Comments that explain why the code is doing something",
+              "Comments that repeat the code in English",
+              "Comments that describe every single line"
+            ],
+            correctAnswer: 1,
+            explanation: "Good comments explain WHY the code is doing something, not WHAT it's doing. The code itself should be clear enough to show what it does.",
+            codeSnippet: `// Bad comment - explains WHAT
+int sight = 0; // Set sight to 0
+
+// Good comment - explains WHY  
+int sight = 0; // Player drank a potion of blindness and can't see
+
+// Bad comment - explains WHAT
+cost = quantity * 2 * storePrice; // Calculate cost
+
+// Good comment - explains WHY
+cost = quantity * 2 * storePrice; // Multiply by 2 because items are sold in pairs`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 15,
+            question: "What is 'commenting out' code?",
+            options: [
+              "Adding documentation to your code",
+              "Converting code into comments to temporarily exclude it from compilation",
+              "Removing all comments from code",
+              "Writing better comments"
+            ],
+            correctAnswer: 1,
+            explanation: "Commenting out code means converting one or more lines of code into comments to temporarily exclude them from being compiled and executed.",
+            codeSnippet: `// Original code:
+std::cout << "Hello";
+std::cout << "World";
+
+// Commented out using single-line comments:
+// std::cout << "Hello";
+std::cout << "World";
+
+// Commented out using multi-line comments:
+/*
+std::cout << "Hello";
+std::cout << "World";
+*/`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 16,
+            question: "Where should comments that describe what a function does be placed?",
+            options: [
+              "At the end of each line inside the function",
+              "Immediately preceding the function or at the top of the file",
+              "Only inside the function body",
+              "Comments should not describe what functions do"
+            ],
+            correctAnswer: 1,
+            explanation: "Comments describing what a library, program, or function does should be placed at the top of the file or immediately preceding the function, giving readers a high-level understanding without looking at implementation details.",
+            codeSnippet: `// This function calculates the area of a circle using the given radius
+double calculateCircleArea(double radius) {
+    return 3.14159 * radius * radius;
+}
+
+// This program demonstrates basic input/output operations
+int main() {
+    double r = 5.0;
+    double area = calculateCircleArea(r);
+    std::cout << "Area: " << area << std::endl;
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 17,
+            question: "What is data in the context of computer programming?",
+            options: [
+              "Only numbers that a program can use",
+              "Any information that can be moved, processed, or stored by a computer",
+              "Only text that appears on the screen",
+              "The source code of the program itself"
+            ],
+            correctAnswer: 1,
+            explanation: "Data is any information that can be moved, processed, or stored by a computer. Programs manipulate data to produce desired results."
+          },
+          {
+            id: 18,
+            question: "What is a value (or data value) in programming?",
+            options: [
+              "The price of software",
+              "A single piece of data",
+              "Only whole numbers",
+              "The result of a program"
+            ],
+            correctAnswer: 1,
+            explanation: "A value (sometimes called a data value) is a single piece of data. Examples include numbers (5, -6.7), characters ('H'), or text (\"Hello\")."
+          },
+          {
+            id: 19,
+            question: "Which of the following correctly demonstrates different types of literals?",
+            options: [
+              "5 (number), 'H' (character), \"Hello\" (text)",
+              "'5' (number), H (character), Hello (text)",
+              "5 (text), 'Hello' (character), \"H\" (number)",
+              "All literals must be in quotes"
+            ],
+            correctAnswer: 0,
+            explanation: "Numeric values are not quoted, character values use single quotes, and text values use double quotes. 5 is a number, 'H' is a character, \"Hello\" is text.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << 5;       // number literal (no quotes)
+    std::cout << 'H';     // character literal (single quotes)  
+    std::cout << "Hello"; // text literal (double quotes)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 20,
+            question: "What is an object in C++?",
+            options: [
+              "Only classes and structs",
+              "A region of storage that can hold a value",
+              "A function with parameters",
+              "A type of comment"
+            ],
+            correctAnswer: 1,
+            explanation: "An object in C++ represents a region of storage (typically RAM or a CPU register) that can hold a value. Objects provide indirect access to memory."
+          },
+          {
+            id: 21,
+            question: "What is the difference between an object and a variable?",
+            options: [
+              "There is no difference",
+              "Objects are for classes, variables are for functions",
+              "A variable is an object that has a name (identifier)",
+              "Objects are bigger than variables"
+            ],
+            correctAnswer: 2,
+            explanation: "A variable is an object that has a name (identifier). Objects can be unnamed (anonymous), but when we give an object a name, we call it a variable.",
+            codeSnippet: `int main() {
+    int x;    // x is a variable (named object)
+    // Objects can also be unnamed/anonymous
+    // but variables are the named ones we typically use
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 22,
+            question: "What is a variable definition statement used for?",
+            options: [
+              "To delete a variable from memory",
+              "To tell the compiler that we want to use a variable in our program",
+              "To change the type of an existing variable",
+              "To print the value of a variable"
+            ],
+            correctAnswer: 1,
+            explanation: "A definition statement tells the compiler that we want to use a variable in our program. The compiler then handles memory allocation and other details.",
+            codeSnippet: `int main() {
+    int x;     // definition statement - tells compiler we want variable x
+    double y;  // definition statement - tells compiler we want variable y
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 23,
+            question: "What does 'int x;' accomplish?",
+            options: [
+              "It creates a variable named x that can store integer values",
+              "It prints the number x to the screen",
+              "It calculates the value of x",
+              "It deletes variable x"
+            ],
+            correctAnswer: 0,
+            explanation: "'int x;' is a variable definition that creates a variable named x of type int (integer). This variable can store whole number values like 5, -10, or 0.",
+            codeSnippet: `int main() {
+    int x;      // Define integer variable x
+    double y;   // Define double variable y
+    char c;     // Define character variable c
+    
+    // Each variable can store values of its specified type
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 24,
+            question: "When must the data type of an object be known?",
+            options: [
+              "At runtime when the program executes",
+              "At compile-time when the program is being compiled",
+              "Only when debugging the program",
+              "The type can be changed anytime"
+            ],
+            correctAnswer: 1,
+            explanation: "The data type of an object must be known at compile-time so the compiler knows how much memory the object requires. The type cannot be changed without recompiling.",
+            codeSnippet: `int main() {
+    int x;     // Type 'int' known at compile-time
+    double y;  // Type 'double' known at compile-time
+    
+    // The compiler uses this type information to:
+    // - Allocate proper amount of memory
+    // - Determine valid operations
+    // - Catch type-related errors
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 25,
+            question: "Which of the following is the correct way to define multiple variables of the same type?",
+            options: [
+              "int a, int b;",
+              "int a, double b;",
+              "int a, b;",
+              "int a; int b; (recommended)"
+            ],
+            correctAnswer: 3,
+            explanation: "While 'int a, b;' is legal, the recommended practice is to define each variable on its own line for better readability and documentation. This makes code easier to understand and maintain.",
+            codeSnippet: `int main() {
+    // Legal but not recommended:
+    int a, b, c;
+    
+    // Recommended approach:
+    int x;  // stores player x position
+    int y;  // stores player y position  
+    int z;  // stores player z position
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 26,
+            question: "What happens to a variable at runtime after it's defined?",
+            options: [
+              "Nothing, it only exists during compilation",
+              "Memory is allocated and the object is created",
+              "It automatically gets a random value",
+              "It is immediately destroyed"
+            ],
+            correctAnswer: 1,
+            explanation: "At runtime, when the program executes, memory is allocated for the variable and the object is created. This process of reserving storage for an object's use is called allocation."
           }
         ]
       },
@@ -305,6 +613,724 @@ int main() {
             explanation: "Whitespace separates tokens (keywords, identifiers, operators) and makes code more readable. While extra whitespace is often ignored, some is required for separation."
           }
         ]
+      },
+      {
+        id: "chapter-1-bonus",
+        title: "C++ Basics - Bonus",
+        description: "Modern C++ features, best practices, and fundamental concepts beyond LearnCpp.com",
+        chapter: "Chapter 1",
+        sections: ["Modern C++ features", "Function behavior", "Memory concepts", "Integer types"],
+        questions: [
+          {
+            id: 1,
+            question: "What does the 'auto' keyword do in modern C++?",
+            options: [
+              "It creates automatic variables",
+              "It lets the compiler deduce the variable type",
+              "It makes variables constant",
+              "It allocates memory automatically"
+            ],
+            correctAnswer: 1,
+            explanation: "The 'auto' keyword (C++11+) allows the compiler to automatically deduce the type of a variable based on its initializer, making code more readable and maintainable.",
+            codeSnippet: `#include <vector>
+#include <string>
+
+int main() {
+    auto number = 42;           // int
+    auto decimal = 3.14;        // double
+    auto text = "Hello";        // const char*
+    auto name = std::string("World"); // std::string
+    
+    std::vector<int> nums = {1, 2, 3};
+    auto it = nums.begin();     // std::vector<int>::iterator
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 2,
+            question: "What is the difference between '#include <iostream>' and '#include \"iostream\"'?",
+            options: [
+              "No difference, both work the same",
+              "<> searches system directories, \"\" searches local directories first",
+              "\"\" is for C headers, <> is for C++ headers",
+              "<> is deprecated in modern C++"
+            ],
+            correctAnswer: 1,
+            explanation: "Angle brackets <> tell the preprocessor to search for headers in system/standard directories. Quotes \"\" search in the current directory first, then system directories.",
+            codeSnippet: `// System/standard library headers
+#include <iostream>    // Standard C++ library
+#include <vector>      // STL container
+#include <cmath>       // C math library (C++ wrapper)
+
+// User-defined headers (local files)
+#include "myheader.h"     // Look in current directory first
+#include "../utils.h"     // Relative path
+#include "config/settings.h" // Subdirectory`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 3,
+            question: "What does 'using namespace std;' do and why might it be problematic?",
+            options: [
+              "It's always the best practice for cleaner code",
+              "It brings all std names into global scope, potentially causing name conflicts",
+              "It's required for using any standard library functions",
+              "It only works in header files"
+            ],
+            correctAnswer: 1,
+            explanation: "While 'using namespace std;' allows writing 'cout' instead of 'std::cout', it can cause name conflicts and is generally avoided in header files and large projects.",
+            codeSnippet: `// Problematic in larger projects
+using namespace std;
+cout << "Hello" << endl;  // Can conflict with other 'cout' definitions
+
+// Better practice - be explicit
+std::cout << "Hello" << std::endl;
+
+// Acceptable compromise - specific using declarations
+using std::cout;
+using std::endl;
+cout << "Hello" << endl;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 4,
+            question: "What is the purpose of '#pragma once' in C++ headers?",
+            options: [
+              "It compiles the file only once per program",
+              "It prevents multiple inclusions of the same header file",
+              "It optimizes compilation speed",
+              "It's a deprecated feature from old C++"
+            ],
+            correctAnswer: 1,
+            explanation: "'#pragma once' is a non-standard but widely supported directive that prevents a header file from being included multiple times in the same translation unit, similar to include guards.",
+            codeSnippet: `// myheader.h - Modern approach
+#pragma once
+
+class MyClass {
+    // class definition
+};
+
+// Alternative traditional approach with include guards
+#ifndef MYHEADER_H
+#define MYHEADER_H
+
+class MyClass {
+    // class definition  
+};
+
+#endif // MYHEADER_H`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 5,
+            question: "What does the '::' operator do in C++?",
+            options: [
+              "It's used for comments",
+              "It's the scope resolution operator",
+              "It concatenates strings",
+              "It compares two values"
+            ],
+            correctAnswer: 1,
+            explanation: "The '::' scope resolution operator is used to access members of namespaces, classes, or to specify global scope. It's essential for organizing code and avoiding name conflicts.",
+            codeSnippet: `#include <iostream>
+
+int value = 100;  // Global variable
+
+namespace MyNamespace {
+    int value = 200;
+    
+    class MyClass {
+    public:
+        static int value;
+    };
+}
+
+int MyNamespace::MyClass::value = 300;
+
+int main() {
+    int value = 400;  // Local variable
+    
+    std::cout << ::value << std::endl;                    // 100 (global)
+    std::cout << MyNamespace::value << std::endl;         // 200 (namespace)
+    std::cout << MyNamespace::MyClass::value << std::endl; // 300 (class static)
+    std::cout << value << std::endl;                      // 400 (local)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 6,
+            question: "What is a bit in computer memory?",
+            options: [
+              "A piece of hardware",
+              "A memory signal",
+              "A binary digit",
+              "A CPU command"
+            ],
+            correctAnswer: 2,
+            explanation: "A bit is a binary digit — either 0 or 1. It's the smallest unit of information in computing."
+          },
+          {
+            id: 7,
+            question: "Why are bits grouped together?",
+            options: [
+              "To save energy",
+              "To store colors",
+              "To form values",
+              "To clean memory"
+            ],
+            correctAnswer: 2,
+            explanation: "Bits are grouped to represent values like numbers, characters, and other data types."
+          },
+          {
+            id: 8,
+            question: "How many values can 4 bits hold?",
+            options: [
+              "16 values",
+              "15 values",
+              "12 values",
+              "10 values"
+            ],
+            correctAnswer: 0,
+            explanation: "2⁴ = 16, so 4 bits can hold 16 unique values (from 0 to 15)."
+          },
+          {
+            id: 9,
+            question: "What does n = 2^b mean?",
+            options: [
+              "Bit speed",
+              "Bit type",
+              "Bit range",
+              "Bit size"
+            ],
+            correctAnswer: 2,
+            explanation: "It shows how many values (n) you can represent with b bits."
+          },
+          {
+            id: 10,
+            question: "What does 01000001 mean?",
+            options: [
+              "Always 'A'",
+              "Always 65",
+              "May mean 'A'",
+              "Always true"
+            ],
+            correctAnswer: 2,
+            explanation: "It could mean 'A' (char) or 65 (int) depending on the data type."
+          },
+          {
+            id: 11,
+            question: "Why is the data type needed?",
+            options: [
+              "To sort code",
+              "To name bits",
+              "To read bits",
+              "To color code"
+            ],
+            correctAnswer: 2,
+            explanation: "Data types tell the compiler how to interpret and use the bits."
+          },
+          {
+            id: 12,
+            question: "Why use a variable name?",
+            options: [
+              "For short code",
+              "For quick math",
+              "For clear use",
+              "For more RAM"
+            ],
+            correctAnswer: 2,
+            explanation: "Variable names let us label memory locations in a readable way."
+          },
+          {
+            id: 13,
+            question: "Why not add char + bool?",
+            options: [
+              "Too slow",
+              "Not valid",
+              "Wastes RAM",
+              "Used rarely"
+            ],
+            correctAnswer: 1,
+            explanation: "They're different types and not logically compatible for addition.",
+            codeSnippet: `char a = 'A';
+bool b = true;
+auto x = a + b;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 14,
+            question: "What must a constant have?",
+            options: [
+              "A name",
+              "A type",
+              "A value",
+              "A flag"
+            ],
+            correctAnswer: 2,
+            explanation: "A constant must be assigned a value when declared.",
+            codeSnippet: `const int max = 100;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 15,
+            question: "How is const different?",
+            options: [
+              "Can't change",
+              "No address",
+              "No type tag",
+              "Used once"
+            ],
+            correctAnswer: 0,
+            explanation: "Constants can't be changed after being initialized."
+          },
+          {
+            id: 16,
+            question: "What is the primary difference between `int` and `unsigned int`?",
+            options: [
+              "`unsigned int` uses more memory",
+              "`int` can store negative and positive numbers, `unsigned int` only positive",
+              "`unsigned int` stores decimal values only",
+              "`int` automatically wraps to 0 on overflow"
+            ],
+            correctAnswer: 1,
+            explanation: "`unsigned int` can store only non-negative values but allows twice the positive range of `int`, which splits its range between positive and negative numbers.",
+            codeSnippet: `int a = -5;
+unsigned int b = 5;
+// 'b' cannot store negative values`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 17,
+            question: "What happens when you assign `-1` to an `unsigned int`?",
+            options: [
+              "It stores -1 without error",
+              "It stores 0",
+              "It wraps to the maximum value representable",
+              "It causes a compilation error"
+            ],
+            correctAnswer: 2,
+            explanation: "Assigning a negative value to an unsigned type wraps it to a large positive value due to binary representation (e.g., `-1` becomes `4294967295` on 32-bit).",
+            codeSnippet: `unsigned int value = -1;
+std::cout << value << "\\n"; // Likely prints 4294967295`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 18,
+            question: "Which type should be used to store only positive values up to 65,535?",
+            options: [
+              "int",
+              "short",
+              "unsigned short",
+              "long long"
+            ],
+            correctAnswer: 2,
+            explanation: "`unsigned short` provides a 16-bit range from 0 to 65,535. `short` covers -32,768 to 32,767.",
+            codeSnippet: `unsigned short level = 65535;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 19,
+            question: "What is the output of the following code on most systems?",
+            options: [
+              "0",
+              "-32768",
+              "32767",
+              "Overflow error"
+            ],
+            correctAnswer: 1,
+            explanation: "`short` wraps on overflow. Incrementing the max value of a 16-bit `short` causes it to wrap to the lowest negative value.",
+            codeSnippet: `short x = 32767;
+x++;
+std::cout << x << "\\n";`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 20,
+            question: "Which of the following is true about `long long` compared to `int`?",
+            options: [
+              "`long long` takes less memory",
+              "`long long` always stores only positive numbers",
+              "`long long` has a wider range than `int`",
+              "`long long` is deprecated in modern C++"
+            ],
+            correctAnswer: 2,
+            explanation: "`long long` uses at least 64 bits, allowing much larger integer values than `int` which is typically 32 bits.",
+            codeSnippet: `long long big = 9223372036854775807;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 21,
+            question: "Which statement correctly initializes the largest possible value in an `unsigned long long`?",
+            options: [
+              "unsigned long long x = -1;",
+              "unsigned long long x = 18446744073709551615ULL;",
+              "unsigned long long x = 9223372036854775807;",
+              "unsigned long long x = 1e20;"
+            ],
+            correctAnswer: 1,
+            explanation: "The max value for `unsigned long long` is `2^64 - 1`, which is `18446744073709551615`. The `ULL` suffix ensures it's treated as an unsigned long long.",
+            codeSnippet: `unsigned long long x = 18446744073709551615ULL;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 22,
+            question: "What happens if you add 1 to an `unsigned short` containing 65535?",
+            options: [
+              "It wraps to 0",
+              "It causes a compile-time error",
+              "It becomes 65536",
+              "It becomes undefined"
+            ],
+            correctAnswer: 0,
+            explanation: "`unsigned short` has a max value of 65535. Adding 1 causes a wraparound back to 0 due to modulo arithmetic.",
+            codeSnippet: `unsigned short x = 65535;
+x++;
+std::cout << x << "\\n"; // Outputs 0`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 23,
+            question: "Which of the following declarations is most memory-efficient for storing values from 0 to 200?",
+            options: [
+              "int",
+              "short",
+              "unsigned short",
+              "long long"
+            ],
+            correctAnswer: 2,
+            explanation: "`unsigned short` uses 16 bits and supports values from 0 to 65,535 — more than enough to store 0 to 200 using minimal memory.",
+            codeSnippet: `unsigned short score = 200;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 24,
+            question: "Which type is safest to use when you need to store very large positive numbers only?",
+            options: [
+              "long long",
+              "unsigned int",
+              "unsigned long long",
+              "int"
+            ],
+            correctAnswer: 2,
+            explanation: "`unsigned long long` gives the widest range of positive values among standard integer types (up to `2^64 - 1`).",
+            codeSnippet: `unsigned long long id = 12345678901234567890ULL;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 25,
+            question: "What is the result of subtracting a larger `unsigned int` from a smaller one?",
+            options: [
+              "A negative number",
+              "Zero",
+              "Wraparound to a large positive number",
+              "A compile error"
+            ],
+            correctAnswer: 2,
+            explanation: "Unsigned integers can't represent negative numbers. Subtracting a larger number from a smaller one causes wraparound to a large positive value.",
+            codeSnippet: `unsigned int a = 5;
+unsigned int b = 10;
+std::cout << a - b << "\\n"; // Outputs a large value`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 26,
+            question: "Why might you prefer `int` over `unsigned int` for general-purpose arithmetic?",
+            options: [
+              "`int` is faster to compile",
+              "`int` handles negative values and avoids subtle wraparound bugs",
+              "`unsigned int` is deprecated",
+              "`int` uses more memory"
+            ],
+            correctAnswer: 1,
+            explanation: "While `unsigned int` gives more positive range, it can cause hard-to-detect bugs when negative values are accidentally assigned or subtracted. `int` behaves more predictably in many arithmetic contexts."
+          },
+          {
+            id: 27,
+            question: "Why will `secondmain()` and `thirdmain()` potentially result in undefined behavior even though they compile?",
+            options: [
+              "Because they don't use `std::cout`",
+              "Because their names are not `main`",
+              "Because they lack return statements but declare `int` as the return type",
+              "Because they use both `cout` and `std::cout` inconsistently"
+            ],
+            correctAnswer: 2,
+            explanation: "Both `secondmain()` and `thirdmain()` declare `int` as their return type but do not include return statements. In C++, any non-`main` function that returns `int` must explicitly return a value. Omitting it results in undefined behavior, even if it seems to run correctly.",
+            codeSnippet: `int secondmain() {
+    cout << "Hello New World!\\n";
+    // No return statement — undefined behavior
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 28,
+            question: "Why does the `main()` function work without a return statement?",
+            options: [
+              "Because it's the first function declared",
+              "Because the compiler automatically adds `return 1;`",
+              "Because the C++ standard allows `main()` to implicitly return 0",
+              "Because `std::cout` handles return values internally"
+            ],
+            correctAnswer: 2,
+            explanation: "Since C++11, the standard allows `main()` to implicitly return 0 if no return statement is provided. This only applies to `main()` — other `int` functions must still return a value.",
+            codeSnippet: `int main() {
+    std::cout << "Hello World!\\n";
+    // Implicit return 0 is allowed here
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 29,
+            question: "What does the line `std::cout << \"Hello World!\\n\";` do?",
+            options: [
+              "It writes text to a file",
+              "It sends the string to the standard output stream",
+              "It stores the string in a variable",
+              "It takes user input"
+            ],
+            correctAnswer: 1,
+            explanation: "`std::cout` is the standard output stream, and the `<<` operator sends the string into the stream to be printed on the console.",
+            codeSnippet: `#include <iostream>
+int main() {
+    std::cout << "Hello World!\\n";
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 30,
+            question: "What is the purpose of `using namespace std;` in this program?",
+            options: [
+              "It disables the need for `#include <iostream>`",
+              "It lets you use standard library names like `cout` without prefixing `std::`",
+              "It defines a new namespace called `std`",
+              "It makes the program run faster"
+            ],
+            correctAnswer: 1,
+            explanation: "`using namespace std;` brings all names from the `std` namespace into the current scope, so you can write `cout` instead of `std::cout`. This is purely syntactic convenience and has no effect on performance.",
+            codeSnippet: `using namespace std;
+int main() {
+    cout << "Hello!";
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 31,
+            question: "Why might someone prefer `std::endl` over `\\n` in output?",
+            options: [
+              "`std::endl` makes the output more readable",
+              "`std::endl` adds a newline and flushes the stream",
+              "`\\n` does not work in all compilers",
+              "`std::endl` skips an extra line automatically"
+            ],
+            correctAnswer: 1,
+            explanation: "`std::endl` inserts a newline and forces the output stream to flush, which can be helpful when immediate output is needed (e.g., before a crash or pause). `\\n` is a plain newline and does not flush the stream.",
+            codeSnippet: `std::cout << "Hello" << std::endl; // newline + flush
+std::cout << "World\\n";          // newline only`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 32,
+            question: "Why does the following code cause a compilation error?",
+            options: [
+              "Because braces can't be used with floats",
+              "Because 100.3 is a narrowing conversion not allowed with braced initialization",
+              "Because braced initialization only works with constants",
+              "Because the variable is declared after a const"
+            ],
+            correctAnswer: 1,
+            explanation: "Braced initialization in C++ prevents narrowing conversions. Assigning a float to an int using `{}` triggers a compile-time error.",
+            codeSnippet: `int nameOfVariable5{ 100.3 };`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 33,
+            question: "Why does the following code compile without error, even though 100.3 is a float?",
+            options: [
+              "C++ automatically rounds all float values",
+              "Assignment-style initialization allows implicit narrowing conversions",
+              "The compiler assumes the float is intentional",
+              "The value is cast to float at runtime"
+            ],
+            correctAnswer: 1,
+            explanation: "Assignment-style initialization allows implicit conversion from float to int, which truncates the decimal part without a compile-time error.",
+            codeSnippet: `int nameOfVariable4 = 100.3;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 34,
+            question: "Why does the following constant declaration work correctly?",
+            options: [
+              "Because constants can only be initialized with literals",
+              "Because the compiler treats it as a global",
+              "Because constants must be initialized where they're declared",
+              "Because `const` variables are automatically static"
+            ],
+            correctAnswer: 2,
+            explanation: "C++ requires `const` variables to be initialized at the time of declaration, which is correctly done here.",
+            codeSnippet: `const int secondsPerMinute{ 60 };`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 35,
+            question: "What is the value of `minutesPlayed` after the following code runs?",
+            options: [
+              "1",
+              "0",
+              "60",
+              "100"
+            ],
+            correctAnswer: 0,
+            explanation: "Integer division truncates the decimal. 100 / 60 equals 1 with the remainder discarded.",
+            codeSnippet: `int totalSecondsPlayed = 100;
+int minutesPlayed = totalSecondsPlayed / 60;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 36,
+            question: "What is the purpose of the following constant declarations?",
+            options: [
+              "To allow reuse while preventing reassignment",
+              "To reduce memory usage",
+              "To enforce compile-time evaluation",
+              "To make all divisions faster"
+            ],
+            correctAnswer: 0,
+            explanation: "`const` values like `secondsPerMinute` and `minutesPerHour` make the code easier to read, safer, and less error-prone by preventing accidental changes.",
+            codeSnippet: `const int secondsPerMinute{ 60 };
+const int minutesPerHour{ 60 };`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 37,
+            question: "Why is using `const` for values like 60 seconds per minute a good practice?",
+            options: [
+              "It speeds up runtime",
+              "It allows you to skip initialization",
+              "It prevents modification and clarifies intent",
+              "It changes value at runtime"
+            ],
+            correctAnswer: 2,
+            explanation: "`const` is ideal for values that never change. It prevents reassignment and signals to others that the value is fixed."
+          },
+          {
+            id: 38,
+            question: "What happens when `totalSecondsPlayed` is initialized as shown?",
+            options: [
+              "It triggers a narrowing conversion",
+              "It causes a runtime error",
+              "It copies the value of another int",
+              "It converts a string to int"
+            ],
+            correctAnswer: 2,
+            explanation: "`nameOfVariable2` is an `int` initialized to 100, so assigning its value to another `int` is valid and safe.",
+            codeSnippet: `int nameOfVariable2 = 100;
+int totalSecondsPlayed = nameOfVariable2;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 39,
+            question: "What will `secondsPlayed` hold after the following code runs?",
+            options: [
+              "40",
+              "1",
+              "0", 
+              "60"
+            ],
+            correctAnswer: 0,
+            explanation: "`secondsPlayed` calculates the remainder: 100 % 60 = 40 seconds remaining after removing complete minutes.",
+            codeSnippet: `int totalSecondsPlayed = 100;
+const int secondsPerMinute = 60;
+int secondsPlayed = totalSecondsPlayed % secondsPerMinute;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 40,
+            question: "Why might the following line break an autograder test?",
+            options: [
+              "It causes a runtime error",
+              "It includes text not expected by the grader",
+              "It uses the wrong escape sequence",
+              "It prints a negative number"
+            ],
+            correctAnswer: 1,
+            explanation: "Autograders usually expect exact output values. Including extra text like `Mins Played:` can cause mismatches.",
+            codeSnippet: `std::cout << "Mins Played: " << minutesPlayed << "\\n";`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 41,
+            question: "What is the main benefit of using braced initialization in C++?",
+            options: [
+              "It uses fewer characters",
+              "It prevents narrowing conversions",
+              "It supports older C syntax",
+              "It initializes values at runtime"
+            ],
+            correctAnswer: 1,
+            explanation: "Braced initialization is safer than assignment or constructor-style initialization because it prevents narrowing conversions, like from float to int.",
+            codeSnippet: `int safeInit{ 100.3 }; // Error
+int looseInit = 100.3; // OK, but silently truncates`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 42,
+            question: "Which of the following is NOT a valid way to initialize an int in C++?",
+            options: [
+              "int x = 5;",
+              "int x(5);",
+              "int x{5};",
+              "int x = {5.0};"
+            ],
+            correctAnswer: 3,
+            explanation: "`int x = {5.0};` is invalid because the float literal creates a narrowing conversion, which is disallowed even when wrapped in braces."
+          },
+          {
+            id: 43,
+            question: "What is the problem with using an uninitialized variable like `nameOfVariable` in a calculation?",
+            options: [
+              "The compiler will substitute zero",
+              "The program will crash",
+              "It results in undefined behavior",
+              "It converts the variable to float"
+            ],
+            correctAnswer: 2,
+            explanation: "Using an uninitialized local variable leads to undefined behavior, which can cause unpredictable results or subtle bugs.",
+            codeSnippet: `int nameOfVariable;
+int result = nameOfVariable + 1; // undefined behavior`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 44,
+            question: "Which variable is not initialized in the following code?",
+            options: [
+              "nameOfVariable",
+              "nameOfVariable2", 
+              "totalSecondsPlayed",
+              "secondsPerMinute"
+            ],
+            correctAnswer: 0,
+            explanation: "`nameOfVariable` is declared without assignment. In C++, local variables are not zero-initialized by default.",
+            codeSnippet: `int nameOfVariable;
+int nameOfVariable2 = 100;
+int totalSecondsPlayed = nameOfVariable2;`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 45,
+            question: "Which of the following statements is true about narrowing conversions in C++?",
+            options: [
+              "They are always allowed with braced initialization",
+              "They are silently allowed in braced initialization", 
+              "They are disallowed with braced initialization but allowed with assignment",
+              "They never occur in C++"
+            ],
+            correctAnswer: 2,
+            explanation: "Braced initialization disallows narrowing conversions (e.g., float to int), but assignment initialization allows them silently."
+          }
+        ]
       }
     ]
   },
@@ -379,6 +1405,163 @@ int main() {
             ],
             correctAnswer: 2,
             explanation: "If a function with a non-void return type doesn't explicitly return a value, the behavior is undefined and can lead to unpredictable results."
+          }
+        ]
+      },
+      {
+        id: "chapter-2-bonus",
+        title: "Functions and Files - Bonus", 
+        description: "Modern C++ function features and build practices",
+        chapter: "Chapter 2",
+        sections: ["Bonus: Modern C++", "Build Systems", "Industry Standards"],
+        questions: [
+          {
+            id: 16,
+            question: "What is a trailing return type in C++ and when would you use it?",
+            options: [
+              "A deprecated syntax from old C++",
+              "A way to specify return type after the parameter list using 'auto' and '->'",
+              "Only used with template functions",
+              "A compiler optimization technique"
+            ],
+            correctAnswer: 1,
+            explanation: "Trailing return type syntax (auto func() -> ReturnType) is useful when the return type depends on template parameters or is complex. It's especially helpful with lambdas and template metaprogramming.",
+            codeSnippet: `#include <vector>
+
+// Traditional syntax - can be difficult with templates
+template<typename T, typename U>
+decltype(T{} + U{}) add_traditional(T a, U b) {
+    return a + b;
+}
+
+// Trailing return type - cleaner and more readable
+template<typename T, typename U>
+auto add_modern(T a, U b) -> decltype(a + b) {
+    return a + b;
+}
+
+// C++14 and later - even simpler
+template<typename T, typename U>
+auto add_simple(T a, U b) {
+    return a + b;  // Return type deduced
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 17,
+            question: "What is the difference between a translation unit and a source file?",
+            options: [
+              "They are exactly the same thing",
+              "A translation unit is a source file after preprocessing (includes expanded)",
+              "Translation units only exist at runtime",
+              "Source files are binary, translation units are text"
+            ],
+            correctAnswer: 1,
+            explanation: "A translation unit is what the compiler sees after the preprocessor has processed a source file - all #include directives have been expanded and all macros have been replaced.",
+            codeSnippet: `// main.cpp (source file)
+#include <iostream>  // This gets expanded
+#include "helper.h"  // This gets expanded
+
+int main() {
+    return 0;
+}
+
+// After preprocessing, the translation unit contains:
+// - All content from <iostream>
+// - All content from "helper.h" 
+// - The main() function
+// This entire expanded content is one translation unit`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 18,
+            question: "What is the purpose of constexpr functions in modern C++?",
+            options: [
+              "To make functions run faster at runtime",
+              "To enable compile-time evaluation when possible",
+              "To prevent function inlining",
+              "To make functions thread-safe"
+            ],
+            correctAnswer: 1,
+            explanation: "constexpr functions can be evaluated at compile-time if given constant expressions as arguments, enabling compile-time computations and potentially better performance.",
+            codeSnippet: `constexpr int factorial(int n) {
+    return (n <= 1) ? 1 : n * factorial(n - 1);
+}
+
+int main() {
+    // Computed at compile-time
+    constexpr int result = factorial(5);  // 120
+    
+    // Can also be called at runtime
+    int input;
+    std::cin >> input;
+    int runtime_result = factorial(input);
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 19,
+            question: "Which build system is most commonly used for modern C++ projects?",
+            options: [
+              "Make only",
+              "CMake",
+              "Visual Studio solutions only",
+              "Ninja only"
+            ],
+            correctAnswer: 1,
+            explanation: "CMake is the de facto standard for cross-platform C++ build configuration. It generates native build files for various systems (Make, Ninja, Visual Studio, Xcode, etc.).",
+            codeSnippet: `# CMakeLists.txt example
+cmake_minimum_required(VERSION 3.20)
+project(MyProject VERSION 1.0)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Create executable
+add_executable(myapp 
+    src/main.cpp
+    src/helper.cpp
+)
+
+# Include directories
+target_include_directories(myapp PRIVATE include)
+
+# Link libraries
+find_package(Threads REQUIRED)
+target_link_libraries(myapp PRIVATE Threads::Threads)`,
+            codeLanguage: "cmake"
+          },
+          {
+            id: 20,
+            question: "What is function overload resolution and why can it be tricky?",
+            options: [
+              "It's how the compiler chooses which overloaded function to call",
+              "It's a runtime performance optimization",
+              "It's only used with virtual functions",
+              "It's a deprecated C++ feature"
+            ],
+            correctAnswer: 0,
+            explanation: "Overload resolution is the compiler's process of selecting the best matching function from multiple overloads. It can be complex due to implicit conversions, template argument deduction, and const-correctness rules.",
+            codeSnippet: `#include <iostream>
+
+void print(int x) { std::cout << "int: " << x << std::endl; }
+void print(double x) { std::cout << "double: " << x << std::endl; }
+void print(const std::string& x) { std::cout << "string: " << x << std::endl; }
+
+int main() {
+    print(42);        // Calls print(int)
+    print(3.14);      // Calls print(double)
+    print("hello");   // Calls print(const std::string&)
+    
+    // Ambiguous cases can cause compilation errors:
+    // print(42.0f);  // float - could convert to int or double
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
           }
         ]
       }
