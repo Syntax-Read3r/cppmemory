@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { quizzes, Quiz } from '@/data/quizzes';
 import QuizCard from '@/components/QuizCard';
 import QuizProgress from '@/components/QuizProgress';
+import { useQuizProgress } from '@/hooks/useQuizProgress';
 
 export default function QuizPage() {
   const params = useParams();
@@ -13,15 +14,35 @@ export default function QuizPage() {
   const quizId = params.id as string;
   
   const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [parentQuiz, setParentQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  
+  const { saveQuizScore, getQuizScore, isQuizCompleted } = useQuizProgress();
 
   useEffect(() => {
-    const foundQuiz = quizzes.find(q => q.id === quizId);
+    // First, try to find the quiz in the top-level quizzes array
+    let foundQuiz = quizzes.find(q => q.id === quizId);
+    let foundParent = null;
+    
+    // If not found, search in the children arrays of parent quizzes
+    if (!foundQuiz) {
+      for (const parentQuizItem of quizzes) {
+        if (parentQuizItem.children) {
+          foundQuiz = parentQuizItem.children.find(child => child.id === quizId);
+          if (foundQuiz) {
+            foundParent = parentQuizItem;
+            break;
+          }
+        }
+      }
+    }
+    
     if (foundQuiz) {
       setQuiz(foundQuiz);
+      setParentQuiz(foundParent);
     } else {
       router.push('/');
     }
@@ -40,21 +61,13 @@ export default function QuizPage() {
       }, 500);
     } else {
       setTimeout(() => {
+        const finalCorrect = correct ? correctAnswers + 1 : correctAnswers;
+        const totalQuestions = quiz!.questions.length;
+        
+        // Save the quiz score and completion status
+        saveQuizScore(quizId, finalCorrect, totalQuestions);
+        
         setIsCompleted(true);
-        
-        const completedQuizzes = JSON.parse(localStorage.getItem('completedQuizzes') || '[]');
-        if (!completedQuizzes.includes(quizId)) {
-          completedQuizzes.push(quizId);
-          localStorage.setItem('completedQuizzes', JSON.stringify(completedQuizzes));
-        }
-        
-        const quizScores = JSON.parse(localStorage.getItem('quizScores') || '{}');
-        quizScores[quizId] = {
-          correct: correct ? correctAnswers + 1 : correctAnswers,
-          total: quiz!.questions.length,
-          percentage: Math.round(((correct ? correctAnswers + 1 : correctAnswers) / quiz!.questions.length) * 100)
-        };
-        localStorage.setItem('quizScores', JSON.stringify(quizScores));
       }, 500);
     }
   };
@@ -66,13 +79,21 @@ export default function QuizPage() {
     setIsCompleted(false);
   };
 
+  const getBackUrl = () => {
+    return parentQuiz ? `/chapter/${parentQuiz.id}` : '/';
+  };
+
+  const getBackText = () => {
+    return parentQuiz ? `← Back to ${parentQuiz.title}` : '← Back to Home';
+  };
+
   if (!quiz) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Quiz not found</h1>
-          <Link href="/" className="text-purple-600 hover:underline">
-            ← Back to Home
+          <Link href={getBackUrl()} className="text-purple-600 hover:underline">
+            {getBackText()}
           </Link>
         </div>
       </div>
@@ -86,8 +107,8 @@ export default function QuizPage() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
         <div className="px-4 py-8 mx-auto max-w-4xl">
           <div className="text-center mb-8">
-            <Link href="/" className="inline-flex items-center text-purple-600 hover:underline mb-4">
-              ← Back to Home
+            <Link href={getBackUrl()} className="inline-flex items-center text-purple-600 hover:underline mb-4">
+              {getBackText()}
             </Link>
           </div>
 
@@ -114,9 +135,14 @@ export default function QuizPage() {
               <div className="text-4xl font-bold text-purple-600 mb-2">
                 {finalScore}%
               </div>
-              <div className="text-gray-600">
+              <div className="text-gray-600 mb-3">
                 {correctAnswers} out of {quiz.questions.length} correct
               </div>
+              {finalScore === 100 && (
+                <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  ✅ Section Completed!
+                </div>
+              )}
             </div>
 
             <div className="mb-6">
@@ -139,10 +165,10 @@ export default function QuizPage() {
                 Retake Quiz
               </button>
               <Link
-                href="/"
+                href={getBackUrl()}
                 className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
               >
-                Back to Home
+                {parentQuiz ? `Back to ${parentQuiz.title}` : 'Back to Home'}
               </Link>
             </div>
           </div>
@@ -155,8 +181,8 @@ export default function QuizPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
       <div className="px-4 py-8 mx-auto max-w-4xl">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center text-purple-600 hover:underline mb-4">
-            ← Back to Home
+          <Link href={getBackUrl()} className="inline-flex items-center text-purple-600 hover:underline mb-4">
+            {getBackText()}
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {quiz.title}
