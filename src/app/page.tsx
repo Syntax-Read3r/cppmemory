@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { quizzes } from '@/data/quizzes';
+import { useQuizProgress } from '@/hooks/useQuizProgress';
 
 export default function Home() {
+  const { getChapterProgress } = useQuizProgress();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
       <div className="px-4 py-8 mx-auto max-w-7xl">
@@ -23,12 +28,29 @@ export default function Home() {
             </span>
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {quizzes.map((quiz) => (
-              <Link
-                key={quiz.id}
-                href={quiz.isParent ? `/chapter/${quiz.id}` : `/quiz/${quiz.id}`}
-                className="block p-6 transition-shadow duration-200 bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg"
-              >
+            {quizzes.map((quiz) => {
+              let borderStyle = 'border-gray-200';
+              let bgStyle = 'bg-white';
+              
+              if (quiz.isParent && quiz.children) {
+                const childQuizIds = quiz.children.map(child => child.id);
+                const chapterProgress = getChapterProgress(childQuizIds);
+                
+                if (chapterProgress.percentage === 100) {
+                  borderStyle = 'border-green-200';
+                  bgStyle = 'bg-green-50';
+                } else if (chapterProgress.percentage > 0) {
+                  borderStyle = 'border-orange-200';
+                  bgStyle = 'bg-orange-50';
+                }
+              }
+              
+              return (
+                <Link
+                  key={quiz.id}
+                  href={quiz.isParent ? `/chapter/${quiz.id}` : `/quiz/${quiz.id}`}
+                  className={`block p-6 transition-shadow duration-200 border-2 rounded-lg shadow-md hover:shadow-lg ${borderStyle} ${bgStyle}`}
+                >
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-lg font-semibold text-gray-900">
                     {quiz.title}
@@ -59,7 +81,8 @@ export default function Home() {
                   {quiz.isParent ? 'Explore Chapter →' : 'Start Quiz →'}
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
 
