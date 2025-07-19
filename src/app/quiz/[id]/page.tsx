@@ -1,21 +1,9 @@
-import { quizzes } from '@/data/quizzes';
+import { quizzes, getAllQuizIds } from '@/data';
 import { notFound } from 'next/navigation';
 import QuizClient from './QuizClient';
 
 export function generateStaticParams() {
-  const allQuizIds: { id: string }[] = [];
-  
-  quizzes.forEach(quiz => {
-    if (quiz.children) {
-      quiz.children.forEach(child => {
-        allQuizIds.push({ id: child.id });
-      });
-    } else {
-      allQuizIds.push({ id: quiz.id });
-    }
-  });
-  
-  return allQuizIds;
+  return getAllQuizIds();
 }
 
 interface QuizPageProps {

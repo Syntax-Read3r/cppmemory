@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { quizzes } from '@/data/quizzes';
+import { quizzes } from '@/data';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
 
 export default function Home() {

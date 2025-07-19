@@ -1,13 +1,9 @@
-import { quizzes } from '@/data/quizzes';
+import { quizzes, getAllChapterIds } from '@/data';
 import { notFound } from 'next/navigation';
 import ChapterClient from './ChapterClient';
 
 export function generateStaticParams() {
-  return quizzes
-    .filter(quiz => quiz.isParent)
-    .map(quiz => ({
-      id: quiz.id
-    }));
+  return getAllChapterIds();
 }
 
 interface ChapterPageProps {

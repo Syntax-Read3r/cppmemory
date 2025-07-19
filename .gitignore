@@ -112,3 +112,6 @@ temp/
 
 # Claude AI assistant files
 .claude/
+
+# Documentation (moved to docs/markdown-docs)
+/markdown-docs/

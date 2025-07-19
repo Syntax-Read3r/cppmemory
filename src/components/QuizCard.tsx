@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Question } from '@/data/quizzes';
+import { Question } from '@/data';
 
 interface QuizCardProps {
   question: Question;

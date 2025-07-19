@@ -998,4 +998,188 @@ if (quiz.isParent && quiz.children) {
 
 ---
 
+## 🔄 Recent Issues (July 2025)
+
+### 16. Turbopack Development Server Errors
+
+#### **Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'**
+
+**Problem:** Next.js 15 with Turbopack encountering stale build artifacts from static export builds.
+
+**Common scenarios:**
+- After running `npm run build` then trying `npm run dev`
+- Switching between production and development modes
+- Build artifacts conflicting with development server
+
+**❌ Error context:**
+```
+Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- C:\...\out\server\pages\_document.js
+```
+
+**✅ Complete solution:**
+```bash
+# Step 1: Clean all build artifacts
+rm -rf .next out node_modules/.cache
+
+# Step 2: Restart development server
+npm run dev
+
+# Step 3: If issues persist, force reinstall
+npm install --force
+```
+
+**Prevention tips:**
+- Don't run development server immediately after production builds
+- Always clean artifacts when switching modes
+- The `out` directory is only for static exports, not development
+
+### 17. Build Manifest Missing in Development
+
+#### **Error: ENOENT build manifest files missing**
+
+**Error Message:**
+```
+Error: ENOENT: no such file or directory, open 'out/static/development/_buildManifest.js.tmp.xxx'
+```
+
+**Cause:** Development server trying to access files from static export output.
+
+**Root cause:** The `out` directory from `npm run build` contains static export files that conflict with Turbopack's development server files.
+
+**✅ Solution:**
+```bash
+# Remove static export output
+rm -rf out
+
+# Clean Next.js cache
+rm -rf .next
+
+# Restart development
+npm run dev
+```
+
+**Why this works:**
+- Static export (`out/`) is for production hosting
+- Development server uses different file structure
+- Turbopack expects clean environment
+
+### 18. Placeholder Chapter Implementation
+
+#### **Issue: Curriculum showing only Chapter 1**
+
+**Problem:** After refactoring to modular data structure, only Chapter 1 appears on homepage.
+
+**Symptoms:**
+- Homepage shows single chapter instead of full curriculum
+- Users can't see complete learning path
+- Navigation incomplete
+
+**✅ Solution process:**
+```typescript
+// 1. Create placeholder structure in placeholder-chapters.ts
+export const chapter2Quiz: Quiz = {
+  id: "chapter-2-functions",
+  title: "Chapter 2 - Functions and Files",
+  description: "Learn about functions, parameters, scope, and multi-file programs",
+  chapter: "Chapter 2",
+  sections: ["2.1 through 2.13", "Complete chapter coverage"],
+  questions: [],
+  isParent: true,
+  children: [
+    // Empty parts with proper structure
+  ]
+};
+
+// 2. Update src/data/index.ts to import all chapters
+import { 
+  chapter2Quiz, chapter3Quiz, /* ... all chapters */
+} from './placeholder-chapters';
+
+// 3. Add to quizzes array
+export const quizzes = [
+  chapter1Quiz,
+  chapter2Quiz, chapter3Quiz, /* ... all chapters */
+];
+```
+
+**Implementation benefits:**
+- Full curriculum visible to users
+- Modular structure maintained
+- Easy to add content chapter by chapter
+- Build generates 102+ static pages
+
+### 19. Console Ninja Warnings (Non-Critical)
+
+#### **Warning: Next.js v15.3.5 not supported in Community edition**
+
+**Message:**
+```
+✘ node v22.16.0, and next.js v15.3.5 are not yet supported in Community edition of Console Ninja
+```
+
+**Impact:** Cosmetic warning only - does not affect functionality
+
+**Solutions:**
+```bash
+# Option 1: Ignore (recommended)
+# This is just a VS Code extension warning
+
+# Option 2: Disable Console Ninja extension
+# In VS Code: Extensions → Console Ninja → Disable
+
+# Option 3: Update when support available
+# Wait for Console Ninja update
+```
+
+**Important:** This warning doesn't prevent development or deployment.
+
+---
+
+## 🚀 Updated Quick Reference (July 2025)
+
+### Current Project Status
+- **Total Chapters:** 28 complete curriculum structure
+- **Active Content:** Chapter 1 COMPLETE (87+ questions across 4 parts)
+  - Part 1: 26 questions (Statements, comments, variables)
+  - Part 2: 87 questions (Assignment, initialization, iostream, undefined behavior)  
+  - Part 3: 134 questions (Keywords, naming, formatting, operators)
+  - Bonus: 45 questions (Modern C++, best practices, integer types)
+- **Placeholder Chapters:** 2-28 (ready for content)
+- **Static Pages Generated:** 102+ pages
+- **Build Status:** ✅ All systems operational
+
+### Environment Reset Commands
+```bash
+# Complete cleanup (when multiple issues occur)
+rm -rf .next out node_modules/.cache
+npm run dev
+
+# Verify build still works
+npm run build
+
+# Development server
+npm run dev
+```
+
+### Build Verification
+```bash
+# Check page generation count
+npm run build | grep "Generating static pages"
+# Should show: ✓ Generating static pages (102/102)
+
+# Verify all chapters accessible
+ls out/chapter/
+# Should list all 28 chapter directories
+```
+
+### Port Management
+- Development server auto-assigns ports (3000, 3001, 3002, etc.)
+- Multiple instances can run simultaneously
+- Port conflicts automatically resolved
+
+---
+
 *This troubleshooting guide should be updated as new CppMemory-specific issues are discovered and resolved.*
+*Last Updated: July 19, 2025 - Added Turbopack and placeholder chapter solutions*

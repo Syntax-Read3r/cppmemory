@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Quiz, Question } from '@/data/quizzes';
+import { Quiz, Question } from '@/data';
 import QuizCard from '@/components/QuizCard';
 import QuizProgress from '@/components/QuizProgress';
 import { useQuizProgress } from '@/hooks/useQuizProgress';

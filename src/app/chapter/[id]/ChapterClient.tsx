@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Quiz } from '@/data/quizzes';
+import { Quiz } from '@/data';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
 
 interface ChapterClientProps {
