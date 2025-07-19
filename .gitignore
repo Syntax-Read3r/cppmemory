@@ -109,3 +109,6 @@ temp/
 
 # Local development files
 .local
+
+# Claude AI assistant files
+.claude/

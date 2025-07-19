@@ -41,7 +41,7 @@ export const useQuizProgress = () => {
       localStorage.setItem('quizScores', JSON.stringify(updatedScores));
       
       // Update completed quizzes list if 100%
-      let updatedCompleted = [...progressData.completedQuizzes];
+      const updatedCompleted = [...progressData.completedQuizzes];
       if (completed && !updatedCompleted.includes(quizId)) {
         updatedCompleted.push(quizId);
         localStorage.setItem('completedQuizzes', JSON.stringify(updatedCompleted));
