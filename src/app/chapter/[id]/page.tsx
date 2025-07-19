@@ -4,16 +4,20 @@ import Link from 'next/link';
 import { quizzes } from '@/data/quizzes';
 import { notFound } from 'next/navigation';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
+import { use } from 'react';
 
 interface ChapterPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function ChapterPage({ params }: ChapterPageProps) {
+  // Unwrap the params Promise
+  const resolvedParams = use(params);
+  
   // Find the parent chapter by ID
-  const parentChapter = quizzes.find(quiz => quiz.id === params.id && quiz.isParent);
+  const parentChapter = quizzes.find(quiz => quiz.id === resolvedParams.id && quiz.isParent);
   
   if (!parentChapter || !parentChapter.children) {
     notFound();

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { quizzes, Quiz } from '@/data/quizzes';
+import { quizzes, Quiz, Question } from '@/data/quizzes';
 import QuizCard from '@/components/QuizCard';
 import QuizProgress from '@/components/QuizProgress';
 import { useQuizProgress } from '@/hooks/useQuizProgress';
@@ -15,12 +15,23 @@ export default function QuizPage() {
   
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [parentQuiz, setParentQuiz] = useState<Quiz | null>(null);
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   
   const { saveQuizScore, getQuizScore, isQuizCompleted } = useQuizProgress();
+
+  // Fisher-Yates shuffle algorithm
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
   useEffect(() => {
     // First, try to find the quiz in the top-level quizzes array
@@ -43,6 +54,8 @@ export default function QuizPage() {
     if (foundQuiz) {
       setQuiz(foundQuiz);
       setParentQuiz(foundParent);
+      // Shuffle questions when quiz is loaded
+      setShuffledQuestions(shuffleArray(foundQuiz.questions));
     } else {
       router.push('/');
     }
@@ -57,12 +70,12 @@ export default function QuizPage() {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex + 1 < quiz!.questions.length) {
+    if (currentQuestionIndex + 1 < shuffledQuestions.length) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       // Quiz completed
       const finalCorrect = correctAnswers;
-      const totalQuestions = quiz!.questions.length;
+      const totalQuestions = shuffledQuestions.length;
       
       // Save the quiz score and completion status
       saveQuizScore(quizId, finalCorrect, totalQuestions);
@@ -76,6 +89,10 @@ export default function QuizPage() {
     setCorrectAnswers(0);
     setAnsweredQuestions(0);
     setIsCompleted(false);
+    // Reshuffle questions when quiz is reset
+    if (quiz) {
+      setShuffledQuestions(shuffleArray(quiz.questions));
+    }
   };
 
   const getBackUrl = () => {
@@ -100,7 +117,7 @@ export default function QuizPage() {
   }
 
   if (isCompleted) {
-    const finalScore = Math.round((correctAnswers / quiz.questions.length) * 100);
+    const finalScore = Math.round((correctAnswers / shuffledQuestions.length) * 100);
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
@@ -135,7 +152,7 @@ export default function QuizPage() {
                 {finalScore}%
               </div>
               <div className="text-gray-600 mb-3">
-                {correctAnswers} out of {quiz.questions.length} correct
+                {correctAnswers} out of {shuffledQuestions.length} correct
               </div>
               {finalScore === 100 && (
                 <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
@@ -155,6 +172,159 @@ export default function QuizPage() {
                 <p className="text-red-600 font-medium">Keep studying! Review the LearnCpp.com sections for this topic.</p>
               )}
             </div>
+
+            {/* Study recommendations for Chapter 1 Part 1 when score < 50% */}
+            {finalScore < 50 && quiz.id === 'chapter-1-part-1' && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="text-lg font-semibold text-blue-900 mb-3">📖 Recommended Study Materials</h3>
+                <p className="text-blue-800 text-sm mb-4">
+                  Since you scored below 50%, we recommend reviewing these LearnCpp.com sections before retaking the quiz:
+                </p>
+                <div className="space-y-2">
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/statements-and-the-structure-of-a-program/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.1</span>
+                      <span className="text-gray-800">Statements and the structure of a program</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/comments/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.2</span>
+                      <span className="text-gray-800">Comments</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/introduction-to-objects-and-variables/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.3</span>
+                      <span className="text-gray-800">Introduction to objects and variables</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                </div>
+                <p className="text-blue-700 text-xs mt-3">
+                  💡 These links will open in a new tab so you can study and come back to retake the quiz.
+                </p>
+              </div>
+            )}
+
+            {/* Study recommendations for Chapter 1 Part 2 when score < 50% */}
+            {finalScore < 50 && quiz.id === 'chapter-1-part-2' && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="text-lg font-semibold text-blue-900 mb-3">📖 Recommended Study Materials</h3>
+                <p className="text-blue-800 text-sm mb-4">
+                  Since you scored below 50%, we recommend reviewing these LearnCpp.com sections before retaking the quiz:
+                </p>
+                <div className="space-y-2">
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/variable-assignment-and-initialization/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.4</span>
+                      <span className="text-gray-800">Variable assignment and initialization</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/introduction-to-iostream-cout-cin-and-endl/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.5</span>
+                      <span className="text-gray-800">Introduction to iostream: cout, cin, and endl</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/uninitialized-variables-and-undefined-behavior/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.6</span>
+                      <span className="text-gray-800">Uninitialized variables and undefined behavior</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                </div>
+                <p className="text-blue-700 text-xs mt-3">
+                  💡 These links will open in a new tab so you can study and come back to retake the quiz.
+                </p>
+              </div>
+            )}
+
+            {/* Study recommendations for Chapter 1 Part 3 when score < 50% */}
+            {finalScore < 50 && quiz.id === 'chapter-1-part-3' && (
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="text-lg font-semibold text-blue-900 mb-3">📖 Recommended Study Materials</h3>
+                <p className="text-blue-800 text-sm mb-4">
+                  Since you scored below 50%, we recommend reviewing these LearnCpp.com sections before retaking the quiz:
+                </p>
+                <div className="space-y-2">
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/keywords-and-naming-identifiers/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.7</span>
+                      <span className="text-gray-800">Keywords and naming identifiers</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/whitespace-and-basic-formatting/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.8</span>
+                      <span className="text-gray-800">Whitespace and basic formatting</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.learncpp.com/cpp-tutorial/introduction-to-literals-and-operators/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3 bg-white border border-blue-300 rounded-lg hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-blue-600 font-medium mr-2">1.9</span>
+                      <span className="text-gray-800">Introduction to literals and operators</span>
+                      <span className="ml-auto text-blue-500">↗</span>
+                    </div>
+                  </a>
+                </div>
+                <p className="text-blue-700 text-xs mt-3">
+                  💡 These links will open in a new tab so you can study and come back to retake the quiz.
+                </p>
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -193,17 +363,19 @@ export default function QuizPage() {
           correct={correctAnswers}
           total={answeredQuestions}
           currentQuestion={currentQuestionIndex + 1}
-          totalQuestions={quiz.questions.length}
+          totalQuestions={shuffledQuestions.length}
         />
 
-        <QuizCard
-          question={quiz.questions[currentQuestionIndex]}
-          onAnswer={handleAnswer}
-          onNext={handleNext}
-          currentQuestion={currentQuestionIndex + 1}
-          totalQuestions={quiz.questions.length}
-          isLastQuestion={currentQuestionIndex === quiz.questions.length - 1}
-        />
+        {shuffledQuestions.length > 0 && (
+          <QuizCard
+            question={shuffledQuestions[currentQuestionIndex]}
+            onAnswer={handleAnswer}
+            onNext={handleNext}
+            currentQuestion={currentQuestionIndex + 1}
+            totalQuestions={shuffledQuestions.length}
+            isLastQuestion={currentQuestionIndex === shuffledQuestions.length - 1}
+          />
+        )}
       </div>
     </div>
   );

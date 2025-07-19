@@ -518,6 +518,233 @@ int main() {
             codeLanguage: "cpp"
           },
           {
+            id: 46,
+            question: "Which form of initialization is preferred in modern C++?",
+            options: [
+              "Copy-initialization: int x = 5;",
+              "Direct-initialization: int x(5);",
+              "Direct-list-initialization: int x{5};",
+              "Default-initialization: int x;"
+            ],
+            correctAnswer: 2,
+            explanation: "Direct-list-initialization (using braces) is preferred because it works consistently, prevents narrowing conversions, and supports initialization with lists of values.",
+            codeSnippet: `int main() {
+    // Preferred modern C++ initialization
+    int width { 5 };           // direct-list-initialization
+    int height {};             // value-initialization (zero)
+    
+    // Other forms (less preferred)
+    int a = 6;                 // copy-initialization  
+    int b ( 7 );               // direct-initialization
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 47,
+            question: "What happens when you try to list-initialize an int with a fractional value?",
+            options: [
+              "It automatically rounds to the nearest integer",
+              "It truncates the fractional part",
+              "The compiler generates an error or warning",
+              "It stores the value as a float instead"
+            ],
+            correctAnswer: 2,
+            explanation: "List-initialization disallows narrowing conversions, so initializing an int with a fractional value like 4.5 will cause a compilation error.",
+            codeSnippet: `int main() {
+    int w1 { 4.5 }; // ERROR: list-init prevents narrowing conversion
+    int w2 = 4.5;   // OK: copy-init allows it (truncates to 4)
+    int w3 ( 4.5 ); // OK: direct-init allows it (truncates to 4)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 48,
+            question: "What is value-initialization and what value does it typically produce?",
+            options: [
+              "Initialization with a specific value you provide",
+              "Initialization with empty braces, typically resulting in zero",
+              "Initialization that preserves the previous memory value",
+              "Initialization that generates a random value"
+            ],
+            correctAnswer: 1,
+            explanation: "Value-initialization uses empty braces {} and typically initializes the variable to zero (or the closest equivalent for the type).",
+            codeSnippet: `int main() {
+    int x {};           // value-initialization, x gets value 0
+    double y {};        // value-initialization, y gets value 0.0
+    
+    std::cout << x;     // prints 0
+    std::cout << y;     // prints 0
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 49,
+            question: "What is wrong with this multiple variable initialization?",
+            options: [
+              "You can't declare multiple variables on one line",
+              "Variable 'a' is not initialized to 5",
+              "The syntax is completely invalid",
+              "Both variables get the same value"
+            ],
+            correctAnswer: 1,
+            explanation: "In 'int a, b = 5;', only variable 'b' is initialized to 5. Variable 'a' is left uninitialized. Each variable needs its own initializer.",
+            codeSnippet: `int main() {
+    int a, b = 5;       // WRONG: 'a' is not initialized!
+    int c = 4, d = 5;   // CORRECT: both have initializers
+    int e { 6 }, f { 7 }; // CORRECT: both have initializers
+    
+    // 'a' contains garbage value - undefined behavior to use it
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 50,
+            question: "What is the purpose of the [[maybe_unused]] attribute?",
+            options: [
+              "To mark variables that might be deleted later",
+              "To suppress compiler warnings about unused variables",
+              "To indicate variables that use less memory",
+              "To mark variables as potentially constant"
+            ],
+            correctAnswer: 1,
+            explanation: "The [[maybe_unused]] attribute (C++17) tells the compiler not to warn about a variable being unused, useful for variables that are conditionally used.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    [[maybe_unused]] double pi { 3.14159 };
+    [[maybe_unused]] double gravity { 9.8 };
+    
+    std::cout << pi;  // pi is used
+    // gravity is unused but no warning generated
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 51,
+            question: "Which of these initialization forms allows narrowing conversions?",
+            options: [
+              "Direct-list-initialization: int x{4.5};",
+              "Copy-initialization: int x = 4.5;",
+              "Value-initialization: int x{};",
+              "None of the above"
+            ],
+            correctAnswer: 1,
+            explanation: "Copy-initialization and direct-initialization allow narrowing conversions (like float to int), while list-initialization prevents them.",
+            codeSnippet: `int main() {
+    // These allow narrowing (4.5 becomes 4):
+    int a = 4.5;    // copy-initialization - OK
+    int b ( 4.5 );  // direct-initialization - OK
+    
+    // This prevents narrowing:
+    int c { 4.5 };  // list-initialization - ERROR
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 52,
+            question: "What is the difference between the assignment operator (=) and equality operator (==)?",
+            options: [
+              "They are the same operator used in different contexts",
+              "= assigns a value, == tests for equality",
+              "= tests for equality, == assigns a value",
+              "= is for integers, == is for floating-point numbers"
+            ],
+            correctAnswer: 1,
+            explanation: "The assignment operator (=) assigns a value to a variable. The equality operator (==) tests whether two values are equal.",
+            codeSnippet: `int main() {
+    int x;
+    
+    x = 5;          // Assignment: give x the value 5
+    
+    if (x == 5) {   // Equality: test if x equals 5
+        // This code runs because x equals 5
+    }
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 53,
+            question: "When should you prefer direct-list-initialization with {0} vs value-initialization with {}?",
+            options: [
+              "{0} and {} are completely interchangeable",
+              "Use {0} when you're using the initial value, {} when it will be replaced",
+              "Use {} when you're using the initial value, {0} when it will be replaced",
+              "Always use {0} for better performance"
+            ],
+            correctAnswer: 1,
+            explanation: "Use {0} when you're actually using that initial zero value. Use {} when the value is temporary and will be immediately replaced (like before user input).",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int score { 0 };    // Use {0} - we're using the 0 value
+    std::cout << score; // Printing the initial 0
+    
+    int userInput {};   // Use {} - value will be replaced
+    std::cin >> userInput; // Immediately replacing value
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 54,
+            question: "What is copy-assignment and when does it occur?",
+            options: [
+              "It's the same as copy-initialization",
+              "It copies the right-hand value to the left-hand variable in assignment",
+              "It only works with string variables",
+              "It creates a copy of the variable"
+            ],
+            correctAnswer: 1,
+            explanation: "Copy-assignment occurs when using the assignment operator (=) to copy a value from the right side to the variable on the left side.",
+            codeSnippet: `int main() {
+    int width;      // Declaration
+    width = 5;      // Copy-assignment: copies 5 to width
+    width = 7;      // Copy-assignment: copies 7 to width (overwrites 5)
+    
+    std::cout << width; // Prints 7
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 55,
+            question: "What is the key limitation of normal variables regarding value storage?",
+            options: [
+              "They can only store integer values",
+              "They can only hold one value at a time",
+              "They can only be used once",
+              "They can't be reassigned after initialization"
+            ],
+            correctAnswer: 1,
+            explanation: "Normal variables can only hold one value at a time. When you assign a new value, it overwrites the previous value.",
+            codeSnippet: `int main() {
+    int x = 5;      // x holds value 5
+    std::cout << x; // prints 5
+    
+    x = 7;          // x now holds 7 (5 is overwritten)
+    std::cout << x; // prints 7
+    
+    // x cannot hold both 5 and 7 simultaneously
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
             id: 5,
             question: "Which header file is needed for std::cout?",
             options: [
@@ -528,6 +755,788 @@ int main() {
             ],
             correctAnswer: 1,
             explanation: "The <iostream> header file contains declarations for input/output stream objects like std::cout and std::cin."
+          },
+          {
+            id: 56,
+            question: "What does std::cout stand for and what is it used for?",
+            options: [
+              "Character output - used to send data to the console",
+              "Console output - used to clear the screen",
+              "Computer output - used to save files",
+              "Character operation - used to manipulate text"
+            ],
+            correctAnswer: 0,
+            explanation: "std::cout stands for 'character output' and is used to send data to the console to be printed as text.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Hello world!";  // prints text
+    std::cout << 42;              // prints numbers
+    
+    int x { 5 };
+    std::cout << x;               // prints variable values
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 57,
+            question: "What operator is used with std::cout to send data to the console?",
+            options: [
+              "The extraction operator >>",
+              "The insertion operator <<",
+              "The assignment operator =",
+              "The equality operator =="
+            ],
+            correctAnswer: 1,
+            explanation: "The insertion operator (<<) is used with std::cout to send data to the console. Think of it as data flowing in the direction of the arrows.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Hello";         // insertion operator
+    std::cout << " " << "world!"; // can chain multiple insertions
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 58,
+            question: "What happens when you use multiple std::cout statements without newlines?",
+            options: [
+              "Each statement prints on a separate line",
+              "All output appears on the same line",
+              "The program produces an error",
+              "Only the last statement prints"
+            ],
+            correctAnswer: 1,
+            explanation: "Separate std::cout statements without newlines will output all text on the same line. You need to explicitly add newlines for separate lines.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Hi!";
+    std::cout << "My name is Alex.";
+    // Prints: Hi!My name is Alex.
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 59,
+            question: "What is the difference between std::endl and \\n?",
+            options: [
+              "They are exactly the same",
+              "std::endl outputs a newline and flushes the buffer, \\n only outputs a newline",
+              "\\n outputs a newline and flushes the buffer, std::endl only outputs a newline",
+              "std::endl is for Windows, \\n is for Unix"
+            ],
+            correctAnswer: 1,
+            explanation: "std::endl outputs a newline AND flushes the buffer (slow), while \\n only outputs a newline without flushing (faster).",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Line 1" << std::endl; // newline + flush (slower)
+    std::cout << "Line 2" << '\\n';       // newline only (faster)
+    std::cout << "Line 3\\n";            // newline embedded in text
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 60,
+            question: "Which newline approach is preferred for console output?",
+            options: [
+              "Always use std::endl for consistency",
+              "Prefer \\n over std::endl for better performance",
+              "Use \\r\\n for cross-platform compatibility",
+              "It doesn't matter, they're identical"
+            ],
+            correctAnswer: 1,
+            explanation: "\\n is preferred because it's more efficient (no buffer flush), more concise, and can be embedded in existing text.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // Preferred approach
+    std::cout << "Fast output\\n";
+    std::cout << "Another line\\n";
+    
+    // Less efficient
+    std::cout << "Slow output" << std::endl;
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 61,
+            question: "What does std::cin stand for and what operator is used with it?",
+            options: [
+              "Character input, uses the insertion operator <<",
+              "Console input, uses the assignment operator =",
+              "Character input, uses the extraction operator >>",
+              "Computer input, uses the equality operator =="
+            ],
+            correctAnswer: 2,
+            explanation: "std::cin stands for 'character input' and uses the extraction operator (>>) to read input from the keyboard into variables.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter a number: ";
+    
+    int x{};
+    std::cin >> x;  // extraction operator reads input
+    
+    std::cout << "You entered " << x << '\\n';
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 62,
+            question: "What happens when you chain multiple extractions with std::cin?",
+            options: [
+              "Only the first extraction works",
+              "You can read multiple values separated by whitespace",
+              "It causes a compilation error",
+              "Each extraction requires a separate line of input"
+            ],
+            correctAnswer: 1,
+            explanation: "You can chain multiple extractions to read multiple values from a single line of input, separated by whitespace (spaces, tabs, or newlines).",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter two numbers: ";
+    
+    int x{}, y{};
+    std::cin >> x >> y;  // reads two values from one input line
+    
+    std::cout << "You entered " << x << " and " << y << '\\n';
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 63,
+            question: "Why is std::cout considered 'buffered'?",
+            options: [
+              "It stores output in memory before sending it to the console",
+              "It can only output one character at a time",
+              "It automatically adds buffer space around text",
+              "It prevents data from being output"
+            ],
+            correctAnswer: 0,
+            explanation: "std::cout is buffered because output is collected in memory (buffer) and then sent to the console in batches for better performance.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // All this output goes to buffer first
+    std::cout << "Line 1\\n";
+    std::cout << "Line 2\\n";
+    std::cout << "Line 3\\n";
+    
+    // Buffer gets flushed when:
+    // - Buffer is full
+    // - Program ends  
+    // - std::endl is used
+    // - Buffer is manually flushed
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 64,
+            question: "What happens during std::cin extraction when invalid input is provided?",
+            options: [
+              "The program crashes immediately",
+              "The variable gets a random value",
+              "Extraction fails, variable gets 0, future extractions fail until cleared",
+              "The invalid input is automatically converted"
+            ],
+            correctAnswer: 2,
+            explanation: "When extraction fails (e.g., entering 'abc' for an int), the variable gets value 0, and std::cin enters a failed state where future extractions won't work until cleared.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter a number: ";
+    
+    int x{};
+    std::cin >> x;  // If user enters 'abc', x becomes 0
+    
+    std::cout << "You entered " << x << '\\n';  // Prints 0
+    
+    // Future extractions will fail until std::cin is cleared
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 65,
+            question: "When std::cin encounters whitespace during extraction, what happens?",
+            options: [
+              "Extraction stops and whitespace is included in the result",
+              "Leading whitespace is discarded, extraction stops at trailing whitespace",
+              "All whitespace is converted to underscores",
+              "Whitespace causes an extraction error"
+            ],
+            correctAnswer: 1,
+            explanation: "std::cin discards leading whitespace, then extracts characters until it hits whitespace, a newline, or invalid characters. Trailing whitespace remains in the buffer.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter numbers: ";
+    
+    int x{}, y{};
+    // Input: "  5   10  " (with spaces)
+    std::cin >> x;  // Reads 5, leaves "   10  " in buffer
+    std::cin >> y;  // Reads 10, leaves "  " in buffer
+    
+    std::cout << x << " and " << y << '\\n';
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 66,
+            question: "What is the correct way to use single quotes vs double quotes with newlines?",
+            options: [
+              "Always use double quotes: \"\\n\"",
+              "Always use single quotes: '\\n'",
+              "Use '\\n' when standalone, \"\\n\" when embedded in text",
+              "Use '\\n' for variables, \"\\n\" for literals"
+            ],
+            correctAnswer: 2,
+            explanation: "Use single quotes '\\n' when the newline stands alone (conventional), and double quotes when embedded in existing text like \"Hello\\n\".",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x { 5 };
+    
+    // Conventional usage
+    std::cout << "Value: " << x << '\\n';        // standalone newline
+    std::cout << "Hello world!\\n";             // embedded in text
+    
+    // Less conventional but acceptable
+    std::cout << "Value: " << x << "\\n";       // standalone with double quotes
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 67,
+            question: "Why should variables be initialized before reading input with std::cin?",
+            options: [
+              "std::cin requires initialized variables to work",
+              "Uninitialized variables cause std::cin to fail",
+              "Following best practice of always initializing variables",
+              "std::cin cannot overwrite uninitialized memory"
+            ],
+            correctAnswer: 2,
+            explanation: "While std::cin will overwrite the variable's value, it's best practice to always initialize variables upon creation for consistency and safety.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter a number: ";
+    
+    // Best practice: initialize even though std::cin will overwrite
+    int x{};        // value-initialize to 0
+    std::cin >> x;  // user input overwrites the 0
+    
+    std::cout << "You entered " << x << '\\n';
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 68,
+            question: "What does FIFO (First In, First Out) mean in the context of std::cin buffering?",
+            options: [
+              "Data is processed in reverse order",
+              "Data is processed in the order it was entered",
+              "Only the first input character is processed",
+              "Data processing order is random"
+            ],
+            correctAnswer: 1,
+            explanation: "FIFO means data is processed in the same order it was entered. Characters added to the end of the input buffer are removed from the front, ensuring proper sequence.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter: abc123\\n";
+    
+    char a, b, c;
+    int num;
+    
+    // Input buffer: a,b,c,1,2,3,\\n
+    std::cin >> a;   // Extracts 'a' (first in, first out)
+    std::cin >> b;   // Extracts 'b' (next in line)
+    std::cin >> c;   // Extracts 'c' (next in line)
+    std::cin >> num; // Extracts 123 (remaining digits)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 69,
+            question: "What happens when std::cin encounters a partial match during number extraction?",
+            options: [
+              "It waits for more input to complete the number",
+              "It extracts what it can and stops at the first invalid character",
+              "It discards the entire input and starts over",
+              "It converts invalid characters to zeros"
+            ],
+            correctAnswer: 1,
+            explanation: "std::cin extracts as many consecutive valid characters as possible, then stops when it hits an invalid character, leaving the invalid character in the buffer.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter: 123abc\\n";
+    
+    int x{};
+    std::cin >> x;  // Extracts "123", stops at 'a'
+    
+    std::cout << x; // Prints: 123
+    // Buffer still contains: abc\\n
+    
+    char letter;
+    std::cin >> letter; // Extracts 'a' from remaining buffer
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 70,
+            question: "In what order are these extraction steps performed by std::cin?",
+            options: [
+              "Extract characters → Check state → Discard whitespace → Wait for input",
+              "Check state → Discard whitespace → Wait if needed → Extract characters",
+              "Wait for input → Extract characters → Check state → Discard whitespace",
+              "Discard whitespace → Extract characters → Wait for input → Check state"
+            ],
+            correctAnswer: 1,
+            explanation: "std::cin follows this order: 1) Check if in good state, 2) Discard leading whitespace, 3) Wait for input if buffer empty, 4) Extract valid characters until invalid char or newline.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter:    123\\n";  // Leading spaces
+    
+    int x{};
+    // 1. Check std::cin state (good)
+    // 2. Discard leading spaces "   "
+    // 3. Buffer not empty, no wait needed
+    // 4. Extract "123" until newline
+    std::cin >> x;
+    
+    std::cout << x; // Prints: 123
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 71,
+            question: "Why is buffered output generally faster than unbuffered output?",
+            options: [
+              "Buffered output uses less memory",
+              "Buffered output batches multiple requests to minimize slow device transfers",
+              "Buffered output compresses the data before sending",
+              "Buffered output processes data in parallel"
+            ],
+            correctAnswer: 1,
+            explanation: "Buffered output is faster because writing to memory (buffer) is quick, while transferring to output devices is slow. Batching multiple outputs reduces the number of slow device transfers.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // Fast: All these go to buffer first (fast memory writes)
+    std::cout << "Line 1\\n";
+    std::cout << "Line 2\\n"; 
+    std::cout << "Line 3\\n";
+    
+    // Then: One batch transfer to console (one slow device write)
+    // vs unbuffered: 3 separate slow device writes
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 72,
+            question: "What happens to input buffer contents when you enter multiple values on one line?",
+            options: [
+              "All values are processed immediately",
+              "Values remain in buffer until extracted by subsequent std::cin operations",
+              "Only the first value is stored, rest is discarded",
+              "Values are automatically split into separate buffers"
+            ],
+            correctAnswer: 1,
+            explanation: "When you enter multiple values on one line, they all go into the input buffer and remain there until extracted by subsequent std::cin operations.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter three numbers: ";
+    // User enters: 10 20 30
+    // Buffer contains: 10 20 30\\n
+    
+    int a{};
+    std::cin >> a;  // Extracts 10, buffer: 20 30\\n
+    
+    int b{};  
+    std::cin >> b;  // Extracts 20, buffer: 30\\n
+    
+    int c{};
+    std::cin >> c;  // Extracts 30, buffer: \\n
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 73,
+            question: "When std::cin is in a failed state, what happens to subsequent extraction attempts?",
+            options: [
+              "They work normally after the first failure",
+              "They immediately fail without attempting extraction",
+              "They clear the failed state automatically",
+              "They prompt the user for new input"
+            ],
+            correctAnswer: 1,
+            explanation: "When std::cin is in a failed state, all subsequent extraction attempts immediately fail without trying to extract anything, until the state is manually cleared.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Enter number: ";
+    // User enters: abc
+    
+    int x{};
+    std::cin >> x;  // FAILS: x becomes 0, std::cin in bad state
+    
+    int y{};
+    std::cin >> y;  // FAILS IMMEDIATELY: doesn't even try to extract
+    
+    // y remains 0, std::cin still in bad state
+    // Need to clear std::cin to fix this
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 74,
+            question: "What is the precise definition of an uninitialized variable in C++?",
+            options: [
+              "A variable that was declared without a data type",
+              "A variable that has not been given a known value yet",
+              "A variable that was assigned a null value",
+              "A variable that exists only in debug builds"
+            ],
+            correctAnswer: 1,
+            explanation: "An uninitialized variable is one that has not been given a known value yet, whether through initialization at definition or through assignment afterward.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;          // Uninitialized - no known value
+    int y = 5;      // Initialized - given known value at definition
+    int z;          // Uninitialized
+    z = 10;         // Now z is no longer uninitialized (has known value)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 75,
+            question: "Why doesn't C++ automatically initialize variables to zero by default?",
+            options: [
+              "It would use too much memory",
+              "It's a performance optimization inherited from C",
+              "Zero is not a valid value for all data types",
+              "It would make the language too complex"
+            ],
+            correctAnswer: 1,
+            explanation: "C++ inherited this behavior from C as a performance optimization. Imagine creating 100,000 variables to read data from a file - initializing them all to zero would be wasteful since you're immediately overwriting those values.",
+            codeSnippet: `// Example scenario where auto-initialization would be wasteful
+int main() {
+    int values[100000];  // Don't waste time initializing these...
+    
+    // ...when we're immediately going to overwrite them
+    for (int i = 0; i < 100000; ++i) {
+        values[i] = readFromFile();  // Values get real data
+    }
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 76,
+            question: "What value will an uninitialized variable contain?",
+            options: [
+              "Always zero",
+              "Always negative one",
+              "Whatever garbage value was previously in that memory location",
+              "A compiler-specific default value"
+            ],
+            correctAnswer: 2,
+            explanation: "Uninitialized variables contain whatever garbage value happened to be in that memory location before. This value is unpredictable and can change between program runs.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;  // Contains garbage - could be anything!
+    
+    std::cout << x;  // Might print 7177728, -858993460, or any random value
+    // The value is whatever was previously in that memory location
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 77,
+            question: "What is undefined behavior (UB) in C++?",
+            options: [
+              "Code that compiles but crashes at runtime",
+              "Code whose behavior is not well-defined by the C++ language",
+              "Code that produces different results on different compilers",
+              "Code that only works in debug mode"
+            ],
+            correctAnswer: 1,
+            explanation: "Undefined behavior is the result of executing code whose behavior is not well-defined by the C++ language. The language doesn't specify what should happen, so anything can occur.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;          // Uninitialized variable
+    std::cout << x; // Undefined behavior - C++ doesn't define what happens
+    
+    // Could print anything, crash, work fine, or behave unpredictably
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 78,
+            question: "Which of these is NOT a possible symptom of undefined behavior?",
+            options: [
+              "Program produces different results every time it runs",
+              "Program crashes immediately or later",
+              "Program works on some compilers but not others",
+              "Program always produces a compile-time error"
+            ],
+            correctAnswer: 3,
+            explanation: "Undefined behavior typically manifests at runtime, not compile-time. Compile-time errors would prevent the program from being built, while UB allows the program to compile but behave unpredictably when run.",
+            codeSnippet: `// This compiles fine but has undefined behavior
+#include <iostream>
+
+int main() {
+    int x;           // No compiler error here
+    std::cout << x;  // UB occurs at runtime, not compile time
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 79,
+            question: "What might happen if you run a program with undefined behavior multiple times?",
+            options: [
+              "It will always produce the same incorrect result",
+              "It will always crash in the same way",
+              "Results may vary - sometimes work, sometimes crash, sometimes give different outputs",
+              "It will automatically fix itself after several runs"
+            ],
+            correctAnswer: 2,
+            explanation: "Undefined behavior is unpredictable. The same program might work fine one run, crash the next, and produce different garbage values on subsequent runs - you never know what you'll get!",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;
+    std::cout << x << '\\n';
+    
+    // Run 1: Might print 7177728
+    // Run 2: Might print 5277592  
+    // Run 3: Might crash
+    // Run 4: Might print 0
+    // Completely unpredictable!
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 80,
+            question: "Why might an uninitialized variable appear to 'work' in debug builds but fail in release builds?",
+            options: [
+              "Debug builds automatically initialize variables to zero",
+              "Some compilers initialize memory to preset values in debug builds",
+              "Release builds have stricter error checking",
+              "Debug builds run more slowly so errors are easier to catch"
+            ],
+            correctAnswer: 1,
+            explanation: "Some compilers (like Visual Studio) initialize memory to preset values in debug builds but not in release builds. This can mask undefined behavior during development.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;
+    std::cout << x;
+    
+    // Debug build: Might consistently print -858993460 (VS preset value)
+    // Release build: Might print random garbage or crash
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 81,
+            question: "What is implementation-defined behavior?",
+            options: [
+              "Behavior that causes undefined results",
+              "Behavior defined by the implementation, must be documented and consistent",
+              "Behavior that only works on specific operating systems",
+              "Behavior that changes between debug and release builds"
+            ],
+            correctAnswer: 1,
+            explanation: "Implementation-defined behavior allows the implementation (compiler + standard library) to choose how something behaves, but it must be documented and consistent for that implementation.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << sizeof(int);  // Implementation-defined
+    
+    // Might print 4 on most platforms
+    // Might print 2 on some older/embedded systems
+    // But consistent for each specific compiler/platform
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 82,
+            question: "What's the difference between implementation-defined and unspecified behavior?",
+            options: [
+              "There is no difference, they're the same thing",
+              "Implementation-defined must be documented, unspecified doesn't require documentation",
+              "Unspecified must be documented, implementation-defined doesn't",
+              "Implementation-defined causes errors, unspecified doesn't"
+            ],
+            correctAnswer: 1,
+            explanation: "Both allow the implementation to choose behavior, but implementation-defined behavior must be documented while unspecified behavior doesn't require documentation.",
+            codeSnippet: `// Implementation-defined: sizeof(int) - must be documented
+// Unspecified: order of evaluation of function arguments - doesn't need docs
+
+#include <iostream>
+
+int getValue() { std::cout << "A"; return 1; }
+int getOther() { std::cout << "B"; return 2; }
+
+int main() {
+    // Unspecified: might print "AB" or "BA" 
+    someFunction(getValue(), getOther());
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 83,
+            question: "What compiler warning might you see when using an uninitialized variable?",
+            options: [
+              "warning: unused variable",
+              "warning: uninitialized local variable used",
+              "error: variable not declared",
+              "warning: implicit conversion"
+            ],
+            correctAnswer: 1,
+            explanation: "Modern compilers often detect when uninitialized variables are used and issue warnings like 'uninitialized local variable used' to help catch this common mistake.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;          // Declaration
+    std::cout << x; // Usage - compiler warns here
+    
+    // Warning: uninitialized local variable 'x' used
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 84,
+            question: "Which of these situations demonstrates the terminology difference between initialized and uninitialized?",
+            options: [
+              "int x = 5; // initialized, int y; // uninitialized",
+              "int x; x = 5; // x becomes initialized after assignment",
+              "int x; x = 5; // x is no longer uninitialized after assignment",
+              "Both B and C are correct"
+            ],
+            correctAnswer: 3,
+            explanation: "After assignment, a variable is no longer uninitialized (it has a known value), but technically 'initialized' refers to getting a value at the point of definition. Both statements B and C correctly describe the terminology.",
+            codeSnippet: `int main() {
+    int x = 5;  // Initialized (value at definition)
+    int y;      // Uninitialized (no known value)
+    y = 10;     // y is no longer uninitialized (has known value)
+                // but wasn't "initialized" since value came after definition
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 85,
+            question: "Why should you 'always initialize your variables' even when performance matters?",
+            options: [
+              "The cost of initialization is minuscule compared to the benefit",
+              "Uninitialized variables use more memory",
+              "It prevents all forms of undefined behavior",
+              "It makes your code run faster"
+            ],
+            correctAnswer: 0,
+            explanation: "The performance cost of initializing variables is typically negligible compared to the massive benefit of avoiding unpredictable undefined behavior that can cause subtle bugs.",
+            codeSnippet: `int main() {
+    // Tiny cost...
+    int x { 0 };        // Minimal performance impact
+    double y { 0.0 };   // Negligible overhead
+    
+    // ...huge benefit: predictable, debuggable behavior
+    std::cout << x + y; // Always works as expected
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 86,
+            question: "What makes undefined behavior particularly challenging to debug?",
+            options: [
+              "It always crashes the program immediately",
+              "It only occurs in release builds",
+              "The program may seem to work fine if the uninitialized variable gets reasonable values",
+              "Modern compilers can't detect it"
+            ],
+            correctAnswer: 2,
+            explanation: "Undefined behavior is tricky because if an uninitialized variable happens to get a 'reasonable' value (like 0), the program might appear to work correctly, masking the underlying bug until it surfaces later.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x;  // Uninitialized
+    
+    // If memory location happens to contain 0, this might work
+    if (x == 0) {
+        std::cout << "Looks like it works!\\n";
+    }
+    
+    // But it's still undefined behavior and could fail anytime
+    return 0;
+}`,
+            codeLanguage: "cpp"
           },
           {
             id: 6,
@@ -562,6 +1571,1228 @@ int main() {
         chapter: "Chapter 1", 
         sections: ["1.7 Keywords and naming identifiers", "1.8 Whitespace and basic formatting", "1.9 Introduction to literals and operators"],
         questions: [
+          {
+            id: 87,
+            question: "How many keywords does C++ have as of C++23?",
+            options: [
+              "85 keywords",
+              "92 keywords", 
+              "78 keywords",
+              "100 keywords"
+            ],
+            correctAnswer: 1,
+            explanation: "C++ reserves 92 words as keywords as of C++23. These words have special meaning and cannot be used as identifiers.",
+            codeSnippet: `// Examples of C++ keywords:
+// int, return, if, else, for, while, class, struct
+// bool, true, false, const, static, void, auto
+// namespace, using, template, typename, etc.
+
+int main() {
+    // int x;     // 'int' is a keyword (type)
+    // return 0;  // 'return' is a keyword (statement)
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 88,
+            question: "Which of these are C++20 keywords that were added in C++20?",
+            options: [
+              "auto, const, static",
+              "concept, consteval, co_await",
+              "class, struct, enum", 
+              "int, bool, char"
+            ],
+            correctAnswer: 1,
+            explanation: "C++20 introduced several new keywords including concept, consteval, constinit, co_await, co_return, co_yield, char8_t, and requires for new language features.",
+            codeSnippet: `// C++20 keywords example
+#include <concepts>
+
+// 'concept' - new in C++20
+template<typename T>
+concept Numeric = std::integral<T> || std::floating_point<T>;
+
+// 'consteval' - new in C++20  
+consteval int square(int n) {
+    return n * n;
+}
+
+// 'requires' - new in C++20
+template<Numeric T>
+T add(T a, T b) requires std::is_arithmetic_v<T> {
+    return a + b;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 89,
+            question: "What are C++ special identifiers?",
+            options: [
+              "Keywords that are case-sensitive",
+              "Identifiers with special meaning in certain contexts but not reserved otherwise",
+              "Identifiers that start with underscores",
+              "Preprocessor directives"
+            ],
+            correctAnswer: 1,
+            explanation: "Special identifiers (override, final, import, module) have specific meaning in certain contexts but are not reserved keywords and can be used as regular identifiers elsewhere.",
+            codeSnippet: `class Base {
+public:
+    virtual void func() {}
+};
+
+class Derived : public Base {
+public:
+    void func() override {}  // 'override' is a special identifier
+};
+
+int main() {
+    int override = 5;  // But can still be used as variable name
+    int final = 10;    // 'final' can also be used as variable name
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 90,
+            question: "What are the three main rules for C++ identifier naming?",
+            options: [
+              "Must be lowercase, no numbers, no symbols",
+              "Cannot be keywords, letters/numbers/underscore only, must start with letter/underscore",
+              "Must start with capital letter, cannot contain spaces, maximum 32 characters",
+              "Cannot start with numbers, must be camelCase, cannot be longer than 16 characters"
+            ],
+            correctAnswer: 1,
+            explanation: "C++ identifier rules: (1) Cannot be a keyword, (2) Can only contain letters, numbers, and underscores, (3) Must start with a letter or underscore (not a number).",
+            codeSnippet: `int main() {
+    // Valid identifiers
+    int value;          // Rule: starts with letter
+    int myValue2;       // Rule: letters, numbers, underscore only
+    int _privateVar;    // Rule: can start with underscore
+    
+    // Invalid identifiers
+    // int 2value;      // Can't start with number
+    // int my-value;    // Can't contain hyphen
+    // int class;       // Can't be a keyword
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 91,
+            question: "Why is C++ case sensitive when it comes to identifiers?",
+            options: [
+              "To make the language more difficult",
+              "To distinguish between different identifiers with similar names",
+              "To match other programming languages",
+              "To reduce memory usage"
+            ],
+            correctAnswer: 1,
+            explanation: "C++ treats uppercase and lowercase letters as different characters, so nvalue, nValue, and NVALUE are three completely different identifiers.",
+            codeSnippet: `int main() {
+    int value = 1;      // Different from below
+    int Value = 2;      // Different from above and below  
+    int VALUE = 3;      // Different from above two
+    int vAlUe = 4;      // Yet another different identifier
+    
+    // All four variables are distinct and can coexist
+    std::cout << value << Value << VALUE << vAlUe; // Prints: 1234
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 92,
+            question: "What is the conventional way to start variable names in C++?",
+            options: [
+              "With a capital letter",
+              "With an underscore",
+              "With a lowercase letter",
+              "With a number"
+            ],
+            correctAnswer: 2,
+            explanation: "C++ convention is that variable names should begin with a lowercase letter. If single word/acronym, use all lowercase. Capital letters are typically reserved for user-defined types.",
+            codeSnippet: `int main() {
+    // Conventional variable names
+    int value;          // Good: starts with lowercase
+    int customerCount;  // Good: camelCase for multi-word
+    int user_input;     // Good: snake_case for multi-word
+    
+    // Unconventional (but valid)
+    int Value;          // Should start with lowercase
+    int TOTAL_SCORE;    // Should not be all caps
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 93,
+            question: "What are the two common naming conventions for multi-word identifiers?",
+            options: [
+              "PascalCase and kebab-case",
+              "snake_case and camelCase",
+              "UPPER_CASE and lower-case",
+              "Hungarian notation and reverse notation"
+            ],
+            correctAnswer: 1,
+            explanation: "The two common conventions are snake_case (words separated by underscores) and camelCase (intercapped words). Both are acceptable in C++.",
+            codeSnippet: `int main() {
+    // snake_case convention
+    int my_variable_name;
+    int customer_total_score;
+    int time_elapsed_seconds;
+    
+    // camelCase convention  
+    int myVariableName;
+    int customerTotalScore;
+    int timeElapsedSeconds;
+    
+    // Both are conventional and widely used
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 94,
+            question: "Why should you avoid starting identifier names with underscores?",
+            options: [
+              "It's against C++ syntax rules",
+              "It makes code harder to read",
+              "Names starting with underscore are typically reserved for OS, library, and compiler use",
+              "It causes performance issues"
+            ],
+            correctAnswer: 2,
+            explanation: "While syntactically legal, identifiers starting with underscores are typically reserved for operating systems, libraries, and compilers. Avoid them to prevent naming conflicts.",
+            codeSnippet: `int main() {
+    // Avoid these (though syntactically legal)
+    // int _count;        // Reserved for implementation
+    // int __value;       // Reserved for implementation
+    // int _Value;        // Reserved for implementation
+    
+    // Use these instead
+    int count;          // Good
+    int value;          // Good
+    int privateValue;   // Good alternative to _value
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 95,
+            question: "What does 'make the length of an identifier proportional to how specific and accessible it is' mean?",
+            options: [
+              "All identifiers should be the same length",
+              "Longer names for specific/accessible identifiers, shorter for trivial/local ones",
+              "All identifiers should be as short as possible",
+              "All identifiers should be as long as possible"
+            ],
+            correctAnswer: 1,
+            explanation: "Short-lived, trivial identifiers can have shorter names (like 'i' for loop counters), while identifiers that are accessible widely or represent specific concepts should have descriptive longer names.",
+            codeSnippet: `int main() {
+    // Short names for short-lived, trivial use
+    for (int i = 0; i < 10; ++i) {     // 'i' is fine for simple loop
+        // ... 
+    }
+    
+    // Longer names for specific, accessible values
+    int customerAccountBalance = 1000;  // Specific concept, clear meaning
+    int millimetersOfPipeLength = 500; // Very specific, units clear
+    
+    // Avoid vague short names for important data
+    // int data;        // Bad: what kind of data?
+    // int time;        // Bad: seconds? minutes? hours?
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 96,
+            question: "Which of these identifier names follows best practices?",
+            options: [
+              "int ccount; // customer count",
+              "int numApples;",
+              "int _total;",
+              "int data;"
+            ],
+            correctAnswer: 1,
+            explanation: "numApples is descriptive, follows naming conventions (starts with lowercase), and clearly indicates what it represents. The others have various issues with clarity or conventions.",
+            codeSnippet: `int main() {
+    // Good examples
+    int numApples;           // Clear, descriptive
+    int customerCount;       // Obvious what we're counting
+    int minutesElapsed;      // Clear units and meaning
+    int monstersKilled;      // Descriptive and clear
+    
+    // Poor examples  
+    // int ccount;           // What does 'c' mean?
+    // int _total;           // Starts with underscore (avoid)
+    // int data;             // Too vague
+    // int x1, x2;           // Not descriptive
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 97,
+            question: "When should you use comments to describe variables?",
+            options: [
+              "For every single variable",
+              "Never, variable names should be self-explanatory",
+              "When the variable's purpose or details might not be obvious from the name",
+              "Only for global variables"
+            ],
+            correctAnswer: 2,
+            explanation: "Use comments when additional context is needed that can't be reasonably conveyed in the variable name alone, such as units, inclusion/exclusion criteria, or special handling.",
+            codeSnippet: `int main() {
+    // Good use of comments for clarity
+    // Count includes whitespace and punctuation  
+    int numChars {};
+    
+    // Temperature in Celsius
+    double roomTemp { 22.5 };
+    
+    // Index of last processed record (0-based)
+    int lastIndex { -1 };
+    
+    // Self-explanatory names that don't need comments
+    int appleCount { 5 };
+    bool isGameOver { false };
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 98,
+            question: "What's wrong with the identifier 'userinput1, userinput2'?",
+            options: [
+              "They contain numbers",
+              "They don't follow camelCase",
+              "They're hard to differentiate due to long similar names",
+              "They should start with capital letters"
+            ],
+            correctAnswer: 2,
+            explanation: "Long, similar names like userinput1 and userinput2 are hard to differentiate quickly when reading code. Better names would distinguish their specific purposes.",
+            codeSnippet: `int main() {
+    // Poor: Hard to differentiate
+    // int userinput1, userinput2;
+    
+    // Better: Descriptive and distinguishable
+    int userName;
+    int userAge;
+    
+    // Or even better with specific context
+    int firstPlayerScore;
+    int secondPlayerScore;
+    
+    // Or
+    int width, height;  // Short but clear in context
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 99,
+            question: "Why should you 'match the style of existing code' when working on someone else's project?",
+            options: [
+              "To make the code compile correctly",
+              "To maintain consistency and readability across the codebase",
+              "Because it's required by C++ standards",
+              "To avoid copyright issues"
+            ],
+            correctAnswer: 1,
+            explanation: "Consistency within a codebase is more important than following abstract best practices. Mixed styles make code harder to read and maintain.",
+            codeSnippet: `// If existing codebase uses snake_case:
+int existing_function() {
+    int user_count = 0;
+    int max_value = 100;
+    return user_count + max_value;
+}
+
+// New code should match existing style
+int new_function() {
+    int item_count = 5;        // Match snake_case
+    // NOT: int itemCount = 5;  // Don't mix with camelCase
+    return item_count;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 100,
+            question: "Which statement about abbreviations in identifiers is correct?",
+            options: [
+              "Always use abbreviations to keep names short",
+              "Never use any abbreviations",
+              "Avoid abbreviations except when they are common and unambiguous",
+              "Only use abbreviations for function names"
+            ],
+            correctAnswer: 2,
+            explanation: "Avoid abbreviations except for common, unambiguous ones like 'num' (number), 'cm' (centimeters), 'idx' (index). Unclear abbreviations hurt readability.",
+            codeSnippet: `int main() {
+    // Good: Common, unambiguous abbreviations
+    int numStudents;        // 'num' is widely understood
+    int heightCm;           // 'cm' is standard unit abbreviation
+    int currentIdx;         // 'idx' commonly means index
+    
+    // Poor: Unclear abbreviations
+    // int stdCnt;          // Student count? Standard count?
+    // int tmpVal;          // Temporary value? Template value?
+    // int calcRes;         // Calculation result? Calendar resource?
+    
+    // Better: Full words
+    int studentCount;
+    int temporaryValue;
+    int calculationResult;
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 101,
+            question: "What are the three primary uses of whitespace in C++?",
+            options: [
+              "Decoration, spacing, and indentation",
+              "Separating language elements, inside text, and formatting code",
+              "Comments, strings, and operators",
+              "Variables, functions, and classes"
+            ],
+            correctAnswer: 1,
+            explanation: "Whitespace in C++ is used for: (1) separating certain language elements, (2) inside quoted text where it's taken literally, and (3) formatting code to make it more readable.",
+            codeSnippet: `#include <iostream>
+
+int main()    // (1) Separating 'int' and 'main'
+{
+    std::cout << "Hello   world!";  // (2) Literal spaces in quotes
+                                   // (3) Formatting with indentation
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 102,
+            question: "Why must 'int' and 'x' be separated by whitespace in a variable declaration?",
+            options: [
+              "To make the code more readable",
+              "So the compiler can distinguish between the keyword and identifier",
+              "To follow C++ style guidelines",
+              "To prevent syntax errors"
+            ],
+            correctAnswer: 1,
+            explanation: "Without whitespace separation, 'intx' would be interpreted as a single identifier, and the compiler wouldn't recognize 'int' as a type keyword.",
+            codeSnippet: `int main() {
+    int x;    // Correct: 'int' and 'x' are separated
+    // intx;  // Error: compiler sees 'intx' as one unknown identifier
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 103,
+            question: "How much whitespace is required when the compiler needs separation?",
+            options: [
+              "Exactly one space",
+              "At least one whitespace character, but can be more",
+              "No more than three spaces",
+              "Must be tabs, not spaces"
+            ],
+            correctAnswer: 1,
+            explanation: "When whitespace is required for separation, the compiler doesn't care how much is used - one space, multiple spaces, tabs, or even newlines all work.",
+            codeSnippet: `int main() {
+    int x;              // One space
+    int                y;  // Multiple spaces
+                int
+    z;                  // Newline separation
+    
+    // All are valid declarations
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 104,
+            question: "What happens if you put code on the same line after a single-line comment?",
+            options: [
+              "The code executes normally",
+              "The code becomes part of the comment and is ignored",
+              "It causes a compilation error",
+              "Only the comment is ignored"
+            ],
+            correctAnswer: 1,
+            explanation: "Single-line comments extend to the end of the line, so any code following the comment on the same line becomes part of the comment and is ignored.",
+            codeSnippet: `int main() {
+    std::cout << "Hello"; // This comment continues
+    // and this code would be ignored
+    
+    // Correct way:
+    std::cout << "Hello"; // Comment here
+    std::cout << "World"; // Code on new line
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 105,
+            question: "Why must preprocessor directives be placed on separate lines?",
+            options: [
+              "To improve readability",
+              "Because the preprocessor processes them line by line",
+              "To follow coding standards",
+              "To prevent namespace conflicts"
+            ],
+            correctAnswer: 1,
+            explanation: "Preprocessor directives are processed line by line before compilation, so each directive must be on its own line for proper processing.",
+            codeSnippet: `// Correct: Each directive on separate line
+#include <iostream>
+#include <string>
+
+// Incorrect: Multiple directives on one line
+// #include <iostream> #include <string>  // Won't work
+
+int main() {
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 106,
+            question: "How does whitespace behave inside quoted text?",
+            options: [
+              "All whitespace is removed",
+              "Whitespace is taken literally",
+              "Only single spaces are preserved",
+              "Whitespace is converted to underscores"
+            ],
+            correctAnswer: 1,
+            explanation: "Inside quoted text, whitespace is preserved exactly as written. The amount and type of whitespace matters and affects the output.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Hello world!";      // Single space
+    std::cout << "Hello    world!";   // Multiple spaces preserved
+    std::cout << "Hello\\tworld!";     // Tab character preserved
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 107,
+            question: "Can newlines be included inside quoted text?",
+            options: [
+              "Yes, they are treated like any other character",
+              "No, newlines are not allowed in quoted text",
+              "Only with special escape sequences",
+              "Only in multi-line strings"
+            ],
+            correctAnswer: 1,
+            explanation: "Newlines are not allowed directly inside quoted text in C++. You must use escape sequences like \\n or end the quote and start a new one.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // Invalid: Direct newline in quotes
+    // std::cout << "Hello
+    //     world!";
+    
+    // Valid alternatives:
+    std::cout << "Hello\\n    world!";  // Using escape sequence
+    std::cout << "Hello "               // String concatenation
+                 "world!";
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 108,
+            question: "What happens when quoted strings are separated only by whitespace?",
+            options: [
+              "They are treated as separate strings",
+              "They are automatically concatenated",
+              "It causes a compilation error",
+              "Only the first string is used"
+            ],
+            correctAnswer: 1,
+            explanation: "Quoted strings separated by nothing but whitespace (spaces, tabs, newlines) are automatically concatenated by the preprocessor.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Hello "
+                 "world!";    // Concatenated to "Hello world!"
+    
+    std::cout << "This "      // Multiple strings
+                 "is "        // separated by whitespace
+                 "concatenated!"; // become one string
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 109,
+            question: "Why is C++ called a 'whitespace-independent' language?",
+            options: [
+              "Because whitespace is completely ignored",
+              "Because C++ doesn't enforce formatting restrictions on programmers",
+              "Because only tabs are allowed, not spaces",
+              "Because all whitespace must be consistent"
+            ],
+            correctAnswer: 1,
+            explanation: "C++ is whitespace-independent because it doesn't enforce specific formatting rules. Programmers have freedom to format code as they prefer (within syntax requirements).",
+            codeSnippet: `// All of these are equivalent to the compiler:
+
+int main(){std::cout<<"Hello";return 0;}
+
+int main() {
+    std::cout << "Hello";
+    return 0;
+}
+
+int main()
+{
+    std::cout << "Hello";
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 110,
+            question: "What is the recommended indentation amount for C++ code?",
+            options: [
+              "2 spaces",
+              "4 spaces or equivalent tab width",
+              "8 spaces",
+              "1 tab character only"
+            ],
+            correctAnswer: 1,
+            explanation: "The recommended indentation is 4 spaces (or tabs set to 4 spaces width). Some IDEs default to 3 spaces, which is also acceptable.",
+            codeSnippet: `int main()
+{
+    std::cout << "Hello";        // 4 spaces indentation
+    
+    if (true)
+    {
+        std::cout << "World";    // 8 spaces (nested)
+    }
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 111,
+            question: "What are the two conventional styles for placing opening braces?",
+            options: [
+              "Above and below the statement",
+              "Same line as statement, or on its own line below",
+              "Indented and non-indented",
+              "Before and after the function name"
+            ],
+            correctAnswer: 1,
+            explanation: "The two common brace styles are: (1) opening brace on the same line as the statement, (2) opening brace on its own line below the statement.",
+            codeSnippet: `// Style 1: Same line (saves vertical space)
+int main() {
+    std::cout << "Hello";
+}
+
+// Style 2: Own line (enhances readability)
+int main()
+{
+    std::cout << "Hello";
+}
+
+// Both are widely used and acceptable`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 112,
+            question: "What is the recommended maximum line length for C++ code?",
+            options: [
+              "60 characters",
+              "80 characters",
+              "120 characters",
+              "No limit"
+            ],
+            correctAnswer: 1,
+            explanation: "80 characters has been the de facto standard for maximum line length. This makes code easier to read and allows side-by-side comparison of code windows.",
+            codeSnippet: `int main()
+{
+    // This line is getting close to 80 characters - consider splitting
+    std::cout << "This is a really, really, really long line that should be split\\n";
+    
+    // Better: Split long lines
+    std::cout << "This is a really, really, really long line "
+                 "that has been properly split\\n";
+                 
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 113,
+            question: "When splitting a long line with operators, where should the operator be placed?",
+            options: [
+              "At the end of the current line",
+              "At the beginning of the next line",
+              "On its own separate line",
+              "It doesn't matter"
+            ],
+            correctAnswer: 1,
+            explanation: "Operators should be placed at the beginning of the continuation line, making it clearer that the line is a continuation and allowing for better alignment.",
+            codeSnippet: `int main()
+{
+    // Preferred: Operator at beginning of next line
+    std::cout << "Long string part 1 "
+              << "and part 2 "
+              << "and part 3\\n";
+    
+    int result = 3 + 4
+               + 5 + 6
+               * 7 * 8;
+               
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 114,
+            question: "What is the benefit of using whitespace to align values and comments?",
+            options: [
+              "It makes the code compile faster",
+              "It makes the code easier to read and compare",
+              "It reduces memory usage",
+              "It's required by C++ standards"
+            ],
+            correctAnswer: 1,
+            explanation: "Aligning values and comments with whitespace makes code much easier to read, scan, and compare. Related elements can be visually grouped and patterns become obvious.",
+            codeSnippet: `int main()
+{
+    // Harder to read:
+    int cost = 57;
+    int pricePerItem = 24;
+    int value = 5;
+    
+    // Easier to read (aligned):
+    int cost         = 57;
+    int pricePerItem = 24;
+    int value        = 5;
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 115,
+            question: "What is the most important principle when choosing a formatting style?",
+            options: [
+              "Use the shortest possible lines",
+              "Follow internet tutorials exactly",
+              "Be consistent with existing project style",
+              "Use as much whitespace as possible"
+            ],
+            correctAnswer: 2,
+            explanation: "Consistency is key. When working in an existing project, match the established style rather than imposing your personal preferences. Consistency trumps personal preference.",
+            codeSnippet: `// If existing codebase uses this style:
+int existingFunction() {
+    int value = 5;
+    return value;
+}
+
+// New code should match (even if you prefer different style):
+int newFunction() {    // Match opening brace style
+    int result = 10;   // Match indentation and spacing
+    return result;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 116,
+            question: "What is the purpose of automatic formatting features in IDEs?",
+            options: [
+              "To change your code logic",
+              "To maintain consistent formatting style throughout your code",
+              "To optimize code performance",
+              "To add missing semicolons"
+            ],
+            correctAnswer: 1,
+            explanation: "Automatic formatting helps maintain consistent style throughout your code, especially when adding/removing code or pasting from other sources. It ensures uniformity without manual effort.",
+            codeSnippet: `// Before auto-formatting (inconsistent):
+int main(){
+std::cout<<"Hello";
+    if(true){std::cout<<"World";}
+return 0;}
+
+// After auto-formatting (consistent):
+int main()
+{
+    std::cout << "Hello";
+    if (true)
+    {
+        std::cout << "World";
+    }
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 117,
+            question: "What is a literal in C++?",
+            options: [
+              "A variable that can be changed",
+              "A fixed value inserted directly into source code",
+              "A function that returns a value",
+              "A memory location that stores data"
+            ],
+            correctAnswer: 1,
+            explanation: "A literal (or literal constant) is a fixed value that has been inserted directly into the source code. Examples include 5, 'A', and \"Hello world!\".",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << "Hello world!";  // "Hello world!" is a string literal
+    int x { 5 };                  // 5 is an integer literal
+    char c { 'A' };               // 'A' is a character literal
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 118,
+            question: "What is the key difference between a literal and a variable?",
+            options: [
+              "Literals are stored in memory, variables are not",
+              "Variables have types, literals do not",
+              "Literals have fixed values that can't be changed, variables can be changed",
+              "Variables are compiled directly into code, literals are not"
+            ],
+            correctAnswer: 2,
+            explanation: "Literals have fixed values that cannot be changed (5 is always 5), while variables can have their values changed through assignment. Literals are compiled directly into the executable.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    std::cout << 5;    // Literal: value 5 is fixed, compiled into executable
+    
+    int x { 5 };       // Variable: value stored in memory location
+    x = 10;            // Variable can be changed
+    std::cout << x;    // Prints new value from memory
+    
+    // 5 = 10;         // Error: can't change a literal!
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 119,
+            question: "Why are literals also called 'literal constants'?",
+            options: [
+              "Because they are declared with the const keyword",
+              "Because their values are fixed and cannot be changed",
+              "Because they use constant memory",
+              "Because they are only used in constant expressions"
+            ],
+            correctAnswer: 1,
+            explanation: "Literals are called constants because their values are fixed and unchangeable. The literal 5 will always have the value 5, unlike variables whose values can be modified.",
+            codeSnippet: `int main() {
+    // These literals are constants - their values never change
+    int a { 42 };        // 42 is always 42
+    double b { 3.14 };   // 3.14 is always 3.14
+    char c { 'X' };      // 'X' is always 'X'
+    
+    // Variables can change, literals cannot
+    a = 100;  // OK: variable can be changed
+    // 42 = 100;  // Error: literal cannot be changed
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 120,
+            question: "What is an operator in C++?",
+            options: [
+              "A function that takes parameters",
+              "A symbol or keyword that performs an operation on operands",
+              "A variable that stores multiple values",
+              "A type that defines data structure"
+            ],
+            correctAnswer: 1,
+            explanation: "An operator is a symbol (like +, -, *) or keyword (like new, delete) that performs a specific operation on one or more operands to produce a result.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int result = 2 + 3;     // '+' is an operator, 2 and 3 are operands
+    
+    std::cout << result;    // '<<' is the insertion operator
+    
+    bool equal = (5 == 5);  // '==' is the equality operator
+    
+    int x = 10;             // '=' is the assignment operator
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 121,
+            question: "What are operands in the context of operators?",
+            options: [
+              "The results produced by operators",
+              "The input values that operators act upon",
+              "The symbols used to represent operations",
+              "The memory locations where operations occur"
+            ],
+            correctAnswer: 1,
+            explanation: "Operands are the input values that operators act upon. In '2 + 3', the numbers 2 and 3 are operands, while + is the operator.",
+            codeSnippet: `int main() {
+    int result = 5 * 7;
+    //           ^   ^
+    //           |   |
+    //      operands (5 and 7)
+    //             ^
+    //           operator (*)
+    
+    std::cout << "Result: " << result;
+    //           ^         ^    ^
+    //           |         |    |
+    //        operand   operator operand
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 122,
+            question: "What is operator arity?",
+            options: [
+              "The speed at which an operator executes",
+              "The number of operands an operator takes as input",
+              "The precedence level of an operator",
+              "The memory usage of an operator"
+            ],
+            correctAnswer: 1,
+            explanation: "Operator arity refers to the number of operands that an operator takes as input. C++ has unary (1), binary (2), ternary (3), and nullary (0) operators.",
+            codeSnippet: `int main() {
+    int x = 5;
+    
+    // Unary operator (1 operand)
+    int neg = -x;           // operator- with one operand
+    
+    // Binary operator (2 operands)  
+    int sum = 3 + 4;        // operator+ with two operands
+    
+    // Ternary operator (3 operands)
+    int max = (x > 0) ? x : 0;  // conditional operator with three operands
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 123,
+            question: "Which of these is an example of a unary operator?",
+            options: [
+              "2 + 3 (addition)",
+              "-5 (negation)",
+              "x = 10 (assignment)",
+              "a == b (equality)"
+            ],
+            correctAnswer: 1,
+            explanation: "The negation operator (-) in '-5' is a unary operator because it acts on only one operand (the number 5). It flips the sign of its operand.",
+            codeSnippet: `int main() {
+    int positive = 5;
+    int negative = -positive;  // Unary minus operator
+    
+    // Other unary operators:
+    positive = +positive;      // Unary plus operator (rarely used)
+    bool flag = true;
+    bool notFlag = !flag;      // Logical NOT operator (unary)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 124,
+            question: "Which of these is an example of a binary operator?",
+            options: [
+              "-x (negation)",
+              "x + y (addition)",
+              "!flag (logical NOT)",
+              "++counter (increment)"
+            ],
+            correctAnswer: 1,
+            explanation: "The addition operator (+) in 'x + y' is a binary operator because it acts on two operands: x (left operand) and y (right operand).",
+            codeSnippet: `int main() {
+    int x = 5, y = 3;
+    
+    // Binary operators (take two operands):
+    int sum = x + y;        // Addition
+    int diff = x - y;       // Subtraction  
+    int product = x * y;    // Multiplication
+    bool equal = x == y;    // Equality comparison
+    
+    std::cout << sum;       // << is also binary: cout and sum
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 125,
+            question: "How many ternary operators does C++ have?",
+            options: [
+              "Zero",
+              "One (the conditional operator)",
+              "Three",
+              "Many, depending on the context"
+            ],
+            correctAnswer: 1,
+            explanation: "C++ has exactly one ternary operator: the conditional operator (?:), which takes three operands in the form 'condition ? value_if_true : value_if_false'.",
+            codeSnippet: `int main() {
+    int x = 5;
+    int y = 10;
+    
+    // The only ternary operator in C++:
+    int max = (x > y) ? x : y;
+    //        ^^^^^^^   ^   ^
+    //        condition | value_if_false
+    //                value_if_true
+    
+    std::cout << "Max: " << max;
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 126,
+            question: "Can operators have different meanings depending on context?",
+            options: [
+              "No, each operator has exactly one meaning",
+              "Yes, some operators can be unary or binary depending on usage",
+              "Only arithmetic operators can have different meanings",
+              "Only in advanced C++ features"
+            ],
+            correctAnswer: 1,
+            explanation: "Some operators have different meanings based on context. For example, '-' can be unary (negation: -5) or binary (subtraction: 4 - 3).",
+            codeSnippet: `int main() {
+    int x = 5;
+    int y = 3;
+    
+    // Minus operator as binary (subtraction)
+    int diff = x - y;       // Binary: 5 - 3 = 2
+    
+    // Minus operator as unary (negation)
+    int negative = -x;      // Unary: -(5) = -5
+    
+    // Can combine both:
+    int result = x - (-y);  // Binary subtraction of unary negation
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 127,
+            question: "What happens when operators are chained together like '2 * 3 + 4'?",
+            options: [
+              "All operators execute simultaneously",
+              "Operators execute left to right regardless of type",
+              "Operators execute according to precedence rules (PEMDAS)",
+              "It causes a compilation error"
+            ],
+            correctAnswer: 2,
+            explanation: "When operators are chained, they execute according to precedence rules. In '2 * 3 + 4', multiplication happens first (2 * 3 = 6), then addition (6 + 4 = 10), following PEMDAS.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // Demonstrates operator precedence
+    int result1 = 2 * 3 + 4;    // Multiplication first: (2 * 3) + 4 = 10
+    int result2 = 2 + 3 * 4;    // Multiplication first: 2 + (3 * 4) = 14
+    int result3 = (2 + 3) * 4;  // Parentheses first: (2 + 3) * 4 = 20
+    
+    std::cout << result1 << " " << result2 << " " << result3;
+    // Prints: 10 14 20
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 128,
+            question: "What does PEMDAS stand for in operator precedence?",
+            options: [
+              "Please Execute My Detailed Algorithm Steps",
+              "Parentheses, Exponents, Multiplication & Division, Addition & Subtraction",
+              "Precedence, Evaluation, Mathematics, Division, Addition, Subtraction",
+              "Primary, Expression, Mathematical, Division, Assignment, Statement"
+            ],
+            correctAnswer: 1,
+            explanation: "PEMDAS stands for Parentheses, Exponents, Multiplication & Division, Addition & Subtraction - the order of mathematical operations. Also taught as PEDMAS, BEDMAS, BODMAS, or BIDMAS in some countries.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // PEMDAS example:
+    int result = 2 + 3 * 4 - 6 / 2;
+    
+    // Step by step:
+    // 1. Multiplication and Division (left to right): 3 * 4 = 12, 6 / 2 = 3
+    // 2. Addition and Subtraction (left to right): 2 + 12 - 3 = 11
+    
+    std::cout << result;  // Prints: 11
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 129,
+            question: "What is a return value of an operator?",
+            options: [
+              "The memory address where the result is stored",
+              "The output value produced by an operation",
+              "The operator symbol itself",
+              "The variable used to store the result"
+            ],
+            correctAnswer: 1,
+            explanation: "A return value is the output value produced by an operation. For example, in '2 + 3', the return value is 5. In C++, operator return values are often just called return values.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // Each operation produces a return value:
+    int sum = 5 + 3;        // Return value: 8
+    int product = 4 * 2;    // Return value: 8  
+    bool comparison = 5 > 3; // Return value: true
+    
+    // Return values can be used directly:
+    std::cout << 2 + 3;     // Uses return value 5 directly
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 130,
+            question: "What is a side effect in the context of C++ operators?",
+            options: [
+              "An unexpected error caused by an operator",
+              "An observable effect beyond producing a return value",
+              "A secondary operator that executes automatically",
+              "A performance penalty from using operators"
+            ],
+            correctAnswer: 1,
+            explanation: "A side effect is an observable effect of an operator beyond producing a return value. For example, 'x = 5' has the side effect of changing x's value, and 'std::cout << 5' has the side effect of printing to console.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x = 10;
+    
+    // Assignment has side effect (changes x) AND return value (x)
+    int y = (x = 5);  // Side effect: x becomes 5, Return value: x (which is 5)
+    
+    // cout has side effect (prints) AND return value (std::cout)
+    std::cout << "Hello" << " World";  // Prints to console (side effect)
+    
+    std::cout << x;   // Prints: 5 (showing x was changed)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 131,
+            question: "Which operators are primarily used for their side effects rather than return values?",
+            options: [
+              "Arithmetic operators like + and *",
+              "Comparison operators like == and <",
+              "Assignment (=) and output (<<) operators",
+              "Logical operators like && and ||"
+            ],
+            correctAnswer: 2,
+            explanation: "Assignment (=) and output (<<) operators are primarily used for their side effects: assignment changes a variable's value, and output prints to console. Their return values are often incidental.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x, y;
+    
+    // Used primarily for side effects:
+    x = 5;              // Side effect: x gets value 5
+    std::cout << x;     // Side effect: prints 5 to console
+    
+    // Used primarily for return values:
+    int sum = 3 + 4;    // Return value: 7 (no side effects)
+    bool equal = 5 == 5; // Return value: true (no side effects)
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 132,
+            question: "What do assignment (=) and output (<<) operators return to enable chaining?",
+            options: [
+              "They return the result of the operation",
+              "They return their left operand",
+              "They return their right operand",
+              "They don't return anything"
+            ],
+            correctAnswer: 1,
+            explanation: "Both assignment (=) and output (<<) operators return their left operand, enabling chaining. 'x = y = 5' works because 'y = 5' returns y, and 'cout << a << b' works because 'cout << a' returns cout.",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    int x, y, z;
+    
+    // Assignment chaining (right to left evaluation):
+    x = y = z = 10;  // z = 10 returns z, y = z returns y, x = y returns x
+    
+    // Output chaining (left to right evaluation):
+    std::cout << "x=" << x << " y=" << y << " z=" << z;
+    // cout << "x=" returns cout, then cout << x returns cout, etc.
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
+          {
+            id: 133,
+            question: "Which statement about keyword operators is correct?",
+            options: [
+              "All operators are symbols like + and -",
+              "Some operators are keywords like new, delete, and throw",
+              "Keyword operators are only used in advanced C++",
+              "Keywords cannot be used as operators"
+            ],
+            correctAnswer: 1,
+            explanation: "While most operators are symbols (like +, -, *, ==), some operators are keywords such as 'new' (for memory allocation), 'delete' (for memory deallocation), and 'throw' (for exceptions).",
+            codeSnippet: `#include <iostream>
+
+int main() {
+    // Symbol operators:
+    int sum = 5 + 3;        // + operator
+    bool equal = 5 == 5;    // == operator
+    
+    // Keyword operators:
+    int* ptr = new int(42); // 'new' operator
+    delete ptr;             // 'delete' operator
+    
+    // 'throw' is also a keyword operator (for exceptions)
+    // throw std::runtime_error("Error");
+    
+    return 0;
+}`,
+            codeLanguage: "cpp"
+          },
           {
             id: 7,
             question: "Which of the following is a valid C++ identifier?",
