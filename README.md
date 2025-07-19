@@ -2,6 +2,12 @@
 
 An interactive C++ learning platform featuring quiz cards based on LearnCpp.com content. Master C++ fundamentals with comprehensive progress tracking and visual feedback.
 
+## 🌐 Live Demo
+
+**Try it now:** [https://syntax-read3r.github.io/cppmemory/](https://syntax-read3r.github.io/cppmemory/)
+
+The application is deployed on GitHub Pages and fully functional. Start learning C++ immediately!
+
 ## Features
 
 - 📚 **Complete LearnCpp.com Coverage**: All 28 chapters with 229 questions across 79 quiz sections
@@ -15,6 +21,10 @@ An interactive C++ learning platform featuring quiz cards based on LearnCpp.com 
 
 ## Getting Started
 
+### Option 1: Use the Live Application
+Visit [https://syntax-read3r.github.io/cppmemory/](https://syntax-read3r.github.io/cppmemory/) to start learning immediately.
+
+### Option 2: Run Locally
 ```bash
 npm install
 npm run dev
@@ -77,9 +87,16 @@ npm run build
 # Type checking
 npm run lint
 
-# Deploy to GitHub Pages
+# Export static files for deployment
+npm run export
+
+# Deploy to GitHub Pages (automated via GitHub Actions)
 npm run deploy
 ```
+
+## Deployment
+
+This project is automatically deployed to GitHub Pages using GitHub Actions. Every push to the `main` branch triggers a new deployment.
 
 ### Troubleshooting
 
